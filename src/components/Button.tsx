@@ -11,6 +11,7 @@ type ButtonProps = {
 const Button = ({
   variant = "primary",
   isLoading = false,
+  className,
   ...props
 }: ButtonProps) => {
   return (
@@ -20,7 +21,7 @@ const Button = ({
           ? "bg-indigo-500 enabled:hover:bg-indigo-600 enabled:active:bg-indigo-500"
           : "bg-gray-500 enabled:hover:bg-gray-600 enabled:active:bg-gray-500"
       } flex w-full items-center justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:ring-offset-1 focus:ring-offset-indigo-100 disabled:cursor-not-allowed ${
-        props.className ?? ""
+        className ?? ""
       }`}
       {...props}
     >

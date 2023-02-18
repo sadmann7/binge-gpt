@@ -8,13 +8,13 @@ import { CheckCircle, Github, Tv2 } from "lucide-react";
 const navLinks = [
   {
     name: "Github",
-    icon: <Github className="aspect-square w-6" />,
+    icon: <Github className="aspect-square w-6" aria-hidden="true" />,
     href: "https://github.com/sadmann7/watchcopilot.git",
     isExternal: true,
   },
   {
     name: "Top ",
-    icon: <CheckCircle className="aspect-square w-6" />,
+    icon: <CheckCircle className="aspect-square w-6" aria-hidden="true" />,
     href: "/top-shows",
     isExternal: false,
   },
@@ -53,7 +53,7 @@ const Header = () => {
           href="/"
           className="flex items-center gap-2 text-gray-900 transition-colors hover:text-black active:text-gray-900"
         >
-          <Tv2 className="aspect-square w-5" />
+          <Tv2 className="aspect-square w-5" aria-hidden="true" />
           <span className="text-xl font-medium">WatchCopilot</span>
         </Link>
         <div className="flex items-center gap-2">

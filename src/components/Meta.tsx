@@ -7,15 +7,15 @@ type MetaProps = {
 };
 
 const Meta = ({
-  title = "Tourwise",
-  description = "Generate places to tour based on your preferences.",
-  image = "https://tourwise.vercel.app/api/og?title=Tourwise&description=Generate%20places%20to%20tour%20based%20on%20your%20preferences&theme=dark",
+  title = "WatchCopilot",
+  description = "Discover Your Next Binge-Worthy Show",
+  image,
 }: MetaProps) => {
   return (
     <Head>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta property="og:site_name" content="Tourwise" />
+      <meta property="og:site_name" content="WatchCopilot" />
       <meta property="og:description" content={description} />
       <meta property="og:title" content={title} />
       <meta property="og:image" content={image} />
@@ -23,6 +23,7 @@ const Meta = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+      <link rel="icon" href="/favicon.ico" />
     </Head>
   );
 };
