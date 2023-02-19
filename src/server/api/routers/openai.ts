@@ -1,14 +1,15 @@
+import { env } from "@/env.mjs";
+import type { Show } from "@/types/globals";
 import { configuration } from "@/utils/openai";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const openaiRouter = createTRPCRouter({
   generate: publicProcedure
     .input(
       z.object({
-        movie: z.string().min(1),
+        show: z.string().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -20,8 +21,10 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const prompt = `Suggest 5 shows to watch for someone who likes ${input.movie} show with the correct movie_id from the TMDB api for that show. Make sure not to include ${input.movie} show in the suggested list. You can use the following template: 1. Show name: TMDB movie_id. 
-      For example: 1. The Office: 1396. Make sure to suggest The Office (US) instead of The Office.`;
+      const prompt = `I have watched ${input.show} show and I liked it. Suggest me 5 shows of the same genre and vibe. 
+      Make sure not to suggest ${input.show} show again. 
+      You can use the following template: 1. Show type: TMDB movie_id. 
+      For example: 1. TV: 66732.  If ${input.show} is a tv show, then use TV instead of Movie.`;
 
       if (!prompt) {
         throw new TRPCError({
@@ -54,16 +57,42 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const movies = completion.data.choices[0].text
+      const formattedData = completion.data.choices[0].text
         .split("\n")
         .filter((movie) => movie !== "")
         .map((movie) => {
-          const [name, id] = movie.split(": ");
+          const [mediaType, id] = movie.split(": ");
           return {
-            name: name?.replace(/^[0-9]+\. /, ""),
+            mediaType: mediaType?.replace(/[0-9]+. /, "").toLowerCase(),
             id: id ? parseInt(id) : id,
           };
         });
-      return movies;
+
+      if (!formattedData) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An error occurred during your request.",
+        });
+      }
+
+      const shows = formattedData.map(async (show) => {
+        if (!show.mediaType || !show.id) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "An error occurred during your request.",
+          });
+        }
+        const fetchedShow = (await fetch(
+          `https://api.themoviedb.org/3/${show.mediaType}/${show.id}?api_key=${env.TMDB_API_KEY}&language=en-US`
+        ).then((res) => res.json())) as Show;
+        if (!show) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Movie not found.",
+          });
+        }
+        return fetchedShow;
+      });
+      return Promise.all(shows);
     }),
 });

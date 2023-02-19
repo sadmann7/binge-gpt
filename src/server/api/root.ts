@@ -1,5 +1,5 @@
-import { moviesRouter } from "./routers/movies";
 import { openaiRouter } from "./routers/openai";
+import { showsRouter } from "./routers/shows";
 import { createTRPCRouter } from "./trpc";
 
 /**
@@ -9,7 +9,7 @@ import { createTRPCRouter } from "./trpc";
  */
 export const appRouter = createTRPCRouter({
   openai: openaiRouter,
-  movies: moviesRouter,
+  shows: showsRouter,
 });
 
 // export type definition of API

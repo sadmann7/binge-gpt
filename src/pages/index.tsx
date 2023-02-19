@@ -1,17 +1,17 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import Head from "next/head";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import type { NextPageWithLayout } from "./_app";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 // external imports
+import Button from "@/components/Button";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { api } from "@/utils/api";
 import { z } from "zod";
-import Button from "@/components/Button";
 
 const schema = z.object({
-  movie: z.string().min(1, { message: "Please enter a show" }),
+  show: z.string().min(1, { message: "Please enter a show" }),
 });
 type Inputs = z.infer<typeof schema>;
 
@@ -26,8 +26,8 @@ const Home: NextPageWithLayout = () => {
     },
   });
 
-  // movie query
-  const moviesQuery = api.movies.get.useMutation({
+  // shows query
+  const showsQuery = api.shows.get.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -42,11 +42,6 @@ const Home: NextPageWithLayout = () => {
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     await generatedMovieMuation.mutateAsync({ ...data });
-    if (!generatedMovieMuation.data) return;
-    const ids = generatedMovieMuation.data?.map(
-      (movie) => movie.id
-    ) as number[];
-    await moviesQuery.mutateAsync(ids);
   };
 
   return (
@@ -78,11 +73,11 @@ const Home: NextPageWithLayout = () => {
               id="show"
               className="w-full rounded-md border-gray-500 bg-transparent px-4 py-2.5 text-base text-black transition-colors placeholder:text-gray-400"
               placeholder="e.g. Stranger Things"
-              {...register("movie")}
+              {...register("show")}
             />
-            {formState.errors.movie ? (
+            {formState.errors.show ? (
               <p className="-mt-1 text-sm font-medium text-red-500">
-                {formState.errors.movie.message}
+                {formState.errors.show.message}
               </p>
             ) : null}
           </fieldset>
