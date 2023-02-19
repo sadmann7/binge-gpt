@@ -37,7 +37,7 @@ export const openaiRouter = createTRPCRouter({
         model: "text-davinci-003",
         prompt: prompt,
         temperature: 0.7,
-        max_tokens: 250,
+        max_tokens: 200,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
@@ -68,13 +68,6 @@ export const openaiRouter = createTRPCRouter({
           };
         });
 
-      if (!formattedData) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred during your request.",
-        });
-      }
-
       const shows = formattedData.map(async (show) => {
         if (!show.mediaType || !show.id) {
           throw new TRPCError({
@@ -88,7 +81,7 @@ export const openaiRouter = createTRPCRouter({
         if (!show) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Movie not found.",
+            message: "Show not found.",
           });
         }
         return fetchedShow;

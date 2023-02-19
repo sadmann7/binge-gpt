@@ -26,16 +26,6 @@ const Home: NextPageWithLayout = () => {
     },
   });
 
-  // shows query
-  const showsQuery = api.shows.get.useMutation({
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   // react-hook-form
   const { register, handleSubmit, formState } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -84,8 +74,8 @@ const Home: NextPageWithLayout = () => {
           <Button
             aria-label="discover your showsw"
             className="w-full"
-            isLoading={formState.isSubmitting}
-            disabled={formState.isSubmitting}
+            isLoading={generatedMovieMuation.isLoading}
+            disabled={generatedMovieMuation.isLoading}
           >
             Discover your shows
           </Button>

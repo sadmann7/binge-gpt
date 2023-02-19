@@ -8,40 +8,28 @@ datasource db {
 }
 
 model Movie {
-    id           Int      @id @default(sequence())
-    title        String
-    releaseDate  DateTime
-    posterPath   String?
-    backdropPath String?
-    overview     String?
-    popularity   Float?
-    voteAverage  Float?
-    voteCount    Int?
-    genres       Genre[]
-    cast         Cast[]
-    crew         Crew[]
+    id          String     @id @default(cuid())
+    name        String
+    overview    String?
+    poster      String?
+    mediaType   MEDIA_TYPE @default(TV)
+    trailer     String?
+    genres      Genre[]
+    releaseDate DateTime?
+    voteAverage Float?
+    voteCount   Int?
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
 }
 
 model Genre {
-    id     Int     @id @default(sequence())
-    name   String
-    movies Movie[]
+    id      String  @id @default(cuid())
+    name    String
+    Movie   Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+    movieId String?
 }
 
-model Cast {
-    id        Int    @id @default(sequence())
-    name      String
-    character String
-    order     Int
-    movieId   Int
-    movie     Movie  @relation(fields: [movieId], references: [id])
-}
-
-model Crew {
-    id         Int    @id @default(sequence())
-    name       String
-    job        String
-    department String
-    movieId    Int
-    movie      Movie  @relation(fields: [movieId], references: [id])
+enum MEDIA_TYPE {
+    MOVIE
+    TV
 }

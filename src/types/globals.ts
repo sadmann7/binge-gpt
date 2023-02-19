@@ -3,7 +3,7 @@ export type Genre = {
   name: string | null;
 };
 
-export type Media = "movie" | "tv";
+export type MediaType = "movie" | "tv";
 
 export type VideoType =
   | "Bloopers"
