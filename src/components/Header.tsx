@@ -47,7 +47,7 @@ const Header = () => {
       }`}
       onScroll={handleScroll}
     >
-      <nav className="container mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+      <nav className="container mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
         <Link
           aria-label="navigate to home page"
           href="/"

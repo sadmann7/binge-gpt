@@ -17,6 +17,7 @@
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
+import { openai } from "@/utils/openai";
 import { prisma } from "../db";
 
 type CreateContextOptions = Record<string, never>;
@@ -34,6 +35,7 @@ type CreateContextOptions = Record<string, never>;
 const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   return {
     prisma,
+    openai,
   };
 };
 
