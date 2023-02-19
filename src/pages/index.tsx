@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import type { NextPageWithLayout } from "./_app";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // external imports
 import DefaultLayout from "@/layouts/DefaultLayout";
@@ -9,14 +10,14 @@ import { api } from "@/utils/api";
 import { z } from "zod";
 import Button from "@/components/Button";
 
-const screen = z.object({
-  show: z.string().min(1),
+const schema = z.object({
+  movie: z.string().min(1, { message: "Please enter a show" }),
 });
-type Inputs = z.infer<typeof screen>;
+type Inputs = z.infer<typeof schema>;
 
 const Home: NextPageWithLayout = () => {
   // generate show mutation
-  const generateShowMutation = api.openai.generate.useMutation({
+  const generatedMovieMuation = api.openai.generate.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -25,8 +26,8 @@ const Home: NextPageWithLayout = () => {
     },
   });
 
-  // show query
-  const showQuery = api.shows.getOne.useMutation({
+  // movie query
+  const moviesQuery = api.movies.get.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -36,12 +37,16 @@ const Home: NextPageWithLayout = () => {
   });
 
   // react-hook-form
-  const { register, handleSubmit, formState } = useForm<Inputs>();
+  const { register, handleSubmit, formState } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+  });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await generateShowMutation.mutateAsync({
-      show: data.show,
-    });
-    await showQuery.mutateAsync(66732);
+    await generatedMovieMuation.mutateAsync({ ...data });
+    if (!generatedMovieMuation.data) return;
+    const ids = generatedMovieMuation.data?.map(
+      (movie) => movie.id
+    ) as number[];
+    await moviesQuery.mutateAsync(ids);
   };
 
   return (
@@ -49,8 +54,16 @@ const Home: NextPageWithLayout = () => {
       <Head>
         <title>WatchCopilot</title>
       </Head>
-      <main className="container mx-auto mt-24 mb-14 flex min-h-screen w-full max-w-5xl flex-col gap-10 px-4">
-        <h1>WatchCopilot</h1>
+      <main className="container mx-auto mt-24 mb-14 flex w-full max-w-5xl flex-col gap-10 px-4">
+        <div>
+          <h1 className="text-4xl font-bold text-black">
+            Discover Your Next Binge-Worthy Show
+          </h1>
+          <p className="text-base text-black">
+            WatchCopilot is a tool that helps you discover your next
+            binge-worthy show.
+          </p>
+        </div>
         <form
           aria-label="generate show from"
           className="grid w-full gap-5"
@@ -58,24 +71,28 @@ const Home: NextPageWithLayout = () => {
         >
           <fieldset className="grid gap-3">
             <label htmlFor="show" className="text-base text-black">
-              <span className="rounded-full text-gray-500">1.</span> Copy your
-              current bio (or write a few sentences about yourself)
+              What show have you recently watched?
             </label>
             <input
               type="text"
               id="show"
               className="w-full rounded-md border-gray-500 bg-transparent px-4 py-2.5 text-base text-black transition-colors placeholder:text-gray-400"
-              placeholder="e.g. Junor web developer, posting about web development, tech, and more."
-              {...register("show")}
+              placeholder="e.g. Stranger Things"
+              {...register("movie")}
             />
+            {formState.errors.movie ? (
+              <p className="-mt-1 text-sm font-medium text-red-500">
+                {formState.errors.movie.message}
+              </p>
+            ) : null}
           </fieldset>
           <Button
-            aria-label="generate show"
+            aria-label="discover your showsw"
             className="w-full"
             isLoading={formState.isSubmitting}
             disabled={formState.isSubmitting}
           >
-            Generate Show
+            Discover your shows
           </Button>
         </form>
       </main>

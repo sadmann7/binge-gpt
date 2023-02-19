@@ -8,7 +8,7 @@ export const openaiRouter = createTRPCRouter({
   generate: publicProcedure
     .input(
       z.object({
-        show: z.string().min(1),
+        movie: z.string().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -20,7 +20,7 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const prompt = `Suggest 5 shows to watch for someone who likes ${input.show} show with the TMDB movie_id. Make sure not to include ${input.show} show in the suggested list. You can use the following template: 1. Show name: TMDB movie_id. 
+      const prompt = `Suggest 5 shows to watch for someone who likes ${input.movie} show with the correct movie_id from the TMDB api for that show. Make sure not to include ${input.movie} show in the suggested list. You can use the following template: 1. Show name: TMDB movie_id. 
       For example: 1. The Office: 1396. Make sure to suggest The Office (US) instead of The Office.`;
 
       if (!prompt) {
@@ -54,17 +54,16 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const shows = completion.data.choices[0].text
+      const movies = completion.data.choices[0].text
         .split("\n")
-        .filter((show) => show !== "")
-        .map((show) => {
-          const [name, id] = show.split(": ");
+        .filter((movie) => movie !== "")
+        .map((movie) => {
+          const [name, id] = movie.split(": ");
           return {
             name: name?.replace(/^[0-9]+\. /, ""),
             id: id ? parseInt(id) : id,
           };
         });
-
-      return shows;
+      return movies;
     }),
 });
