@@ -57,6 +57,7 @@ export type Show = {
   status: string;
   tagline: string | null;
   title: string;
+  name: string;
   video: boolean;
   videos?: {
     results: {

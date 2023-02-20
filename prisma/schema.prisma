@@ -12,7 +12,7 @@ model Movie {
     name        String
     overview    String?
     poster      String?
-    mediaType   MEDIA_TYPE @default(TV)
+    mediaType   MEDIA_TYPE @default(tv)
     trailer     String?
     genres      Genre[]
     releaseDate DateTime?
@@ -30,6 +30,6 @@ model Genre {
 }
 
 enum MEDIA_TYPE {
-    MOVIE
-    TV
+    movie
+    tv
 }

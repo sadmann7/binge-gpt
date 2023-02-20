@@ -10,12 +10,12 @@ export const showsRouter = createTRPCRouter({
     .input(
       z.array(
         z.object({
-          id: z.string().min(1),
+          id: z.number(),
           mediaType: z.nativeEnum(MEDIA_TYPE),
         })
       )
     )
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       const shows = await Promise.all(
         input.map(async ({ id, mediaType }) => {
           const response = await fetch(
@@ -32,5 +32,26 @@ export const showsRouter = createTRPCRouter({
         })
       );
       return shows;
+    }),
+
+  getOne: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        mediaType: z.nativeEnum(MEDIA_TYPE),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/${input.mediaType}/${input.id}?api_key=${env.TMDB_API_KEY}&append_to_response=videos`
+      );
+      if (!response.ok) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `TMDB returned ${response.status} ${response.statusText}`,
+        });
+      }
+      const show = (await response.json()) as Show;
+      return show;
     }),
 });
