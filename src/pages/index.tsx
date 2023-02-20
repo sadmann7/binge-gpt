@@ -9,7 +9,7 @@ import type { NextPageWithLayout } from "./_app";
 // external imports
 import Button from "@/components/Button";
 import DefaultLayout from "@/layouts/DefaultLayout";
-import type { Show } from "@/types/globals";
+import type { GeneratedShow } from "@/types/globals";
 import { api } from "@/utils/api";
 
 const schema = z.object({
@@ -43,7 +43,7 @@ const Home: NextPageWithLayout = () => {
     resolver: zodResolver(schema),
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await generatedShowMutation.mutateAsync({ ...data });
+    // await generatedShowMutation.mutateAsync({ ...data });
     await generateAIShowMutation.mutateAsync({ ...data });
   };
 
@@ -52,14 +52,14 @@ const Home: NextPageWithLayout = () => {
       <Head>
         <title>WatchCopilot</title>
       </Head>
-      <main className="container mx-auto mt-24 mb-14 flex w-full max-w-5xl flex-col gap-10 px-4">
+      <main className="container mx-auto mt-24 mb-14 flex w-full max-w-3xl flex-col gap-10 px-4">
         <div className="flex flex-col gap-5">
-          <h1 className="text-3xl font-bold text-gray-900 sm:text-5xl">
+          <h1 className="text-center text-3xl font-bold text-gray-900 sm:text-5xl">
             <Balancer ratio={0.5}>
               Discover Your Next Binge-Worthy Show
             </Balancer>
           </h1>
-          <p className="text-base text-gray-700">
+          <p className="text-center text-base text-gray-700">
             Tired of searching for your next binge-worthy show? Let our advanced
             AI recommendation system do the work for you. Simply tell us your
             favorite show, and {`we'll`} analyze your viewing habits to suggest
@@ -91,21 +91,21 @@ const Home: NextPageWithLayout = () => {
           <Button
             aria-label="discover your showsw"
             className="w-full"
-            isLoading={generatedShowMutation.isLoading}
-            disabled={generatedShowMutation.isLoading}
+            isLoading={generateAIShowMutation.isLoading}
+            disabled={generateAIShowMutation.isLoading}
           >
             Discover your shows
           </Button>
         </form>
         <div>
-          {generatedShowMutation.isError ? (
+          {generateAIShowMutation.isError ? (
             <p className="text-red-500">
-              {generatedShowMutation.error?.message}
+              {generateAIShowMutation.error?.message}
             </p>
-          ) : generatedShowMutation.isSuccess ? (
+          ) : generateAIShowMutation.isSuccess ? (
             <div className="grid gap-2">
-              {generatedShowMutation.data.map((show) => (
-                <ShowCard key={show.id} show={show} />
+              {generateAIShowMutation.data.map((show) => (
+                <ShowCard key={show.name} show={show} />
               ))}
             </div>
           ) : null}
@@ -119,13 +119,30 @@ export default Home;
 
 Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
-const ShowCard = ({ show }: { show: Show }) => {
+const ShowCard = ({ show }: { show: GeneratedShow }) => {
+  // show mutation
+  const showMutation = api.openai.getShow.useMutation({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-lg font-medium text-gray-900">
-        {show.name ?? show.title ?? show.original_title}
-      </h2>
-      <p className="text-sm text-gray-700 line-clamp-2">{show.overview}</p>
+    <div
+      className="flex flex-col gap-2"
+      onClick={() => {
+        if (!show.name || !show.mediaType) return;
+        showMutation.mutate({
+          name: show.name,
+          mediaType: show.mediaType,
+        });
+      }}
+    >
+      <h2 className="text-lg font-medium text-gray-900">{show.name}</h2>
+      <p className="text-sm text-gray-700 line-clamp-2">{show.description}</p>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import type { MEDIA_TYPE } from "@prisma/client";
+
 export type Genre = {
   id: number;
   name: string | null;
@@ -75,4 +77,10 @@ export type Show = {
   };
   vote_average: number;
   vote_count: number;
+};
+
+export type GeneratedShow = {
+  name?: string;
+  description?: string;
+  mediaType?: MEDIA_TYPE;
 };

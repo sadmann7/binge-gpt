@@ -7,10 +7,10 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Movie {
+model SavedShow {
     id          String     @id @default(cuid())
     name        String
-    overview    String?
+    description String?
     poster      String?
     mediaType   MEDIA_TYPE @default(tv)
     trailer     String?
@@ -23,10 +23,10 @@ model Movie {
 }
 
 model Genre {
-    id      String  @id @default(cuid())
-    name    String
-    Movie   Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
-    movieId String?
+    id          String     @id @default(cuid())
+    name        String
+    SavedShow   SavedShow? @relation(fields: [savedShowId], references: [id], onDelete: Cascade)
+    savedShowId String?
 }
 
 enum MEDIA_TYPE {
