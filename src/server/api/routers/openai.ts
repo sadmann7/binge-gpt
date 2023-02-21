@@ -22,8 +22,8 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const prompt = `I have watched ${input.show}. Suggest me 5 shows of the same genre or mood that I might like. 
-      Query the TMDB api by show name and find the TMDB id of the show. You can use the following template: 1. Show type: TMDB id. 
+      const prompt = `I have watched ${input.show}. Suggest me 5 shows of the same genre or mood from the TMDB site that I might like. 
+      Query the TMDB api by show name and find the TMDB id of the show, and add them to the list. You can use the following template: 1. Show type: TMDB id. 
       For example: 1. TV: 66732.  If ${input.show} is a tv show, then use TV instead of Movie.`;
 
       if (!prompt) {
@@ -76,7 +76,7 @@ export const openaiRouter = createTRPCRouter({
           });
         }
         const fetchedShow = (await fetch(
-          `https://api.themoviedb.org/3/${show.mediaType}/${show.id}?api_key=${env.TMDB_API_KEY}&language=en-US`
+          `https://api.themoviedb.org/3/${show.mediaType}/${show.id}?api_key=${env.TMDB_API_KEY}&language=en-US&append_to_response=videos`
         ).then((res) => res.json())) as Show;
         if (!show) {
           throw new TRPCError({
@@ -188,7 +188,6 @@ export const openaiRouter = createTRPCRouter({
         presence_penalty: 0,
         stream: false,
         n: 1,
-        best_of: 1,
       });
       if (!completion.data.choices) {
         throw new TRPCError({

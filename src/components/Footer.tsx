@@ -3,7 +3,7 @@ const Footer = () => {
     <footer aria-label="footer">
       <div className="grid place-items-center py-4">
         <h1 className="text-base text-black">
-          Powred by{" "}
+          Powered by{" "}
           <a
             aria-label="navigate to github repo"
             href="https://github.com/sadmann7"

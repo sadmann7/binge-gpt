@@ -120,8 +120,8 @@ export default Home;
 Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
 const ShowCard = ({ show }: { show: GeneratedShow }) => {
-  // show mutation
-  const showMutation = api.openai.getShow.useMutation({
+  // find show mutation
+  const findShowMutation = api.shows.findOne.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -135,8 +135,8 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
       className="flex flex-col gap-2"
       onClick={() => {
         if (!show.name || !show.mediaType) return;
-        showMutation.mutate({
-          name: show.name,
+        findShowMutation.mutate({
+          query: show.name,
           mediaType: show.mediaType,
         });
       }}

@@ -1,5 +1,5 @@
 import { env } from "@/env.mjs";
-import type { Show } from "@/types/globals";
+import type { Show, Shows } from "@/types/globals";
 import { MEDIA_TYPE } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -53,5 +53,40 @@ export const showsRouter = createTRPCRouter({
       }
       const show = (await response.json()) as Show;
       return show;
+    }),
+
+  findOne: publicProcedure
+    .input(
+      z.object({
+        query: z.string().min(1),
+        mediaType: z.nativeEnum(MEDIA_TYPE),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?api_key=${
+          env.TMDB_API_KEY
+        }&query=${encodeURIComponent(input.query)}`
+      );
+      if (!response.ok) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `TMDB returned ${response.status} ${response.statusText}`,
+        });
+      }
+      const shows = (await response.json()) as Shows;
+      const anotherResponse = await fetch(
+        `https://api.themoviedb.org/3/${input.mediaType}/${
+          shows.results[0]?.id ?? 66732
+        }?api_key=${env.TMDB_API_KEY}&append_to_response=videos`
+      );
+      if (!anotherResponse.ok) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `TMDB returned ${anotherResponse.status} ${anotherResponse.statusText}`,
+        });
+      }
+      const showWithVideos = (await anotherResponse.json()) as Show;
+      return showWithVideos;
     }),
 });

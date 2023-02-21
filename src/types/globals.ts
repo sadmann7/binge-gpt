@@ -79,6 +79,11 @@ export type Show = {
   vote_count: number;
 };
 
+export type Shows = {
+  page: number;
+  results: Show[];
+};
+
 export type GeneratedShow = {
   name?: string;
   description?: string;
