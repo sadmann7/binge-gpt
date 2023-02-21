@@ -1,8 +1,11 @@
+import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { MEDIA_TYPE } from "@prisma/client";
+import { motion, useAnimation } from "framer-motion";
 import Head from "next/head";
-import { Fragment, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useInView } from "react-intersection-observer";
 import { toast } from "react-toastify";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
@@ -55,7 +58,6 @@ const schema = z.object({
 type Inputs = z.infer<typeof schema>;
 
 const Home: NextPageWithLayout = () => {
-  // generateAI show mutation
   const generateAIShowMutation = api.openai.generateAI.useMutation({
     onSuccess: (data) => {
       console.log(data);
@@ -69,18 +71,53 @@ const Home: NextPageWithLayout = () => {
   const { register, handleSubmit, formState } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    // await generateAIShowMutation.mutateAsync({ ...data });
-    console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    // console.log(data);
+    await generateAIShowMutation.mutateAsync({ ...data });
   };
+
+  // scroll to recommended shows
+  const generatedRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!generatedRef.current || !generateAIShowMutation.data) return;
+    const offset = generatedRef.current.offsetTop - 100;
+    window.scrollTo({
+      top: offset,
+      behavior: "smooth",
+    });
+  }, [generateAIShowMutation.data]);
+
+  // framer-motion
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+    rootMargin: "-100px",
+  });
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (inView) {
+      void controls.start("visible");
+    } else {
+      void controls.start("hidden");
+    }
+    return () => controls.stop();
+  }, [controls, inView]);
 
   return (
     <>
       <Head>
         <title>WatchCopilot</title>
       </Head>
-      <main className="container mx-auto mt-24 mb-14 flex w-full max-w-3xl flex-col gap-10 px-4">
-        <div className="flex flex-col gap-5">
+      <motion.main
+        className="container mx-auto mt-28 mb-14 flex w-full max-w-3xl flex-col gap-16 px-4"
+        initial="hidden"
+        whileInView="visible"
+        animate="visible"
+        viewport={{ once: true }}
+        variants={containerReveal}
+      >
+        <motion.div className="flex flex-col gap-5" variants={itemFadeDown}>
           <h1 className="text-center text-3xl font-bold text-gray-900 sm:text-5xl">
             <Balancer ratio={0.5}>
               Discover Your Next Binge-Worthy Show
@@ -92,10 +129,11 @@ const Home: NextPageWithLayout = () => {
             favorite show, and {`we'll`} analyze your viewing habits to suggest
             the perfect options just for you.
           </p>
-        </div>
-        <form
+        </motion.div>
+        <motion.form
           aria-label="generate show from"
           className="grid w-full gap-5"
+          variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
         >
           <fieldset className="grid gap-3">
@@ -123,26 +161,44 @@ const Home: NextPageWithLayout = () => {
           >
             Discover your shows
           </Button>
-        </form>
-        <div>
-          {/* {generateAIShowMutation.isError ? (
+        </motion.form>
+        <motion.div ref={generatedRef} variants={itemFadeDown}>
+          {generateAIShowMutation.isError ? (
             <p className="text-red-500">
               {generateAIShowMutation.error?.message}
             </p>
           ) : generateAIShowMutation.isSuccess ? (
-            <div className="grid gap-2">
-              {generateAIShowMutation.data.map((show) => (
-                <ShowCard key={show.name} show={show} />
-              ))}
+            <div className="grid place-items-center gap-8">
+              <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+                Recommended shows
+              </h2>
+              <motion.div
+                className="grid gap-3"
+                ref={ref}
+                variants={containerReveal}
+              >
+                {generateAIShowMutation.data.map((show) => (
+                  <ShowCard key={show.name} show={show} />
+                ))}
+              </motion.div>
             </div>
-          ) : null} */}
-          <div className="grid gap-2">
+          ) : null}
+        </motion.div>
+        {/* <motion.div
+          className="grid place-items-center gap-6"
+          ref={generatedRef}
+          variants={itemFadeDown}
+        >
+          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+            Recommended shows
+          </h2>
+          <div className="grid gap-3" ref={ref}>
             {shows
               ? shows.map((show) => <ShowCard key={show.name} show={show} />)
               : null}
           </div>
-        </div>
-      </main>
+        </motion.div> */}
+      </motion.main>
     </>
   );
 };
@@ -167,10 +223,11 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
 
   if (findShowMutation.isError) {
     toast.error(findShowMutation.error?.message);
+    return null;
   }
 
   return (
-    <Fragment>
+    <motion.div variants={itemFadeDown}>
       {findShowMutation.isSuccess ? (
         <Modal
           isOpen={isOpen}
@@ -182,7 +239,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
         />
       ) : null}
       <div
-        className="flex cursor-pointer flex-col gap-3 rounded-md bg-white p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
+        className="flex cursor-pointer flex-col gap-2 rounded-md bg-white p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
@@ -195,6 +252,6 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
         <h2 className="text-lg font-medium text-gray-900">{show.name}</h2>
         <p className="text-sm text-gray-700 line-clamp-2">{show.description}</p>
       </div>
-    </Fragment>
+    </motion.div>
   );
 };
