@@ -7,7 +7,7 @@ import { type ReactElement, type ReactNode } from "react";
 import { Provider as RWBProvider } from "react-wrap-balancer";
 
 // external imports
-import ToastWrapper from "@/components/ToastWrapper";
+import ToasterWrapper from "@/components/ToasterWrapper";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { api } from "@/utils/api";
 
@@ -32,7 +32,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
         <title>WatchCopilot</title>
       </Head>
       {getLayout(<Component {...pageProps} />)}
-      <ToastWrapper />
+      <ToasterWrapper />
     </RWBProvider>
   );
 };

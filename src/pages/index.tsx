@@ -5,8 +5,8 @@ import { motion, useAnimation } from "framer-motion";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
-import { toast } from "react-toastify";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import type { NextPageWithLayout } from "./_app";
@@ -110,40 +110,42 @@ const Home: NextPageWithLayout = () => {
         <title>WatchCopilot</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-28 mb-14 flex w-full max-w-3xl flex-col gap-16 px-4"
+        className="container mx-auto mt-28 mb-14 flex w-full flex-col items-center gap-12 px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"
         viewport={{ once: true }}
         variants={containerReveal}
       >
-        <motion.div className="flex flex-col gap-5" variants={itemFadeDown}>
-          <h1 className="text-center text-3xl font-bold text-gray-900 sm:text-5xl">
-            <Balancer ratio={0.5}>
-              Discover Your Next Binge-Worthy Show
+        <motion.div
+          className="flex flex-col items-center gap-5"
+          variants={itemFadeDown}
+        >
+          <h1 className="mx-auto w-full max-w-6xl text-center text-4xl font-bold text-gray-900 sm:text-6xl">
+            <Balancer ratio={0.6}>
+              Discover your next binge-worthy shows with AI
             </Balancer>
           </h1>
-          <p className="text-center text-base text-gray-700">
-            Tired of searching for your next binge-worthy show? Let our advanced
-            AI recommendation system do the work for you. Simply tell us your
-            favorite show, and {`we'll`} analyze your viewing habits to suggest
-            the perfect options just for you.
+          <p className="w-full max-w-3xl text-center text-base text-gray-700">
+            Let the cutting-edge AI recommendation system effortlessly suggest
+            your next favorite show based on your viewing preferences. Simply
+            tell us your favorite show, and {`we'll`} take care of the rest.
           </p>
         </motion.div>
         <motion.form
           aria-label="generate show from"
-          className="grid w-full gap-5"
+          className="grid w-full max-w-3xl gap-5"
           variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
         >
           <fieldset className="grid gap-3">
             <label htmlFor="show" className="text-base font-medium text-black">
-              What show have you recently watched?
+              What show have you already watched?
             </label>
             <input
               type="text"
               id="show"
-              className="w-full rounded-md border-gray-500 bg-transparent px-4 py-2.5 text-base text-black transition-colors placeholder:text-gray-400"
+              className="w-full rounded-md border-gray-500 bg-transparent px-4 py-2.5 text-base text-black transition-colors placeholder:text-gray-500"
               placeholder="e.g. Stranger Things"
               {...register("show")}
             />
@@ -162,7 +164,11 @@ const Home: NextPageWithLayout = () => {
             Discover your shows
           </Button>
         </motion.form>
-        <motion.div ref={generatedRef} variants={itemFadeDown}>
+        <motion.div
+          className="w-full max-w-3xl"
+          ref={generatedRef}
+          variants={itemFadeDown}
+        >
           {generateAIShowMutation.isError ? (
             <p className="text-red-500">
               {generateAIShowMutation.error?.message}
@@ -173,7 +179,7 @@ const Home: NextPageWithLayout = () => {
                 Recommended shows
               </h2>
               <motion.div
-                className="grid gap-3"
+                className="grid w-full gap-3"
                 ref={ref}
                 variants={containerReveal}
               >
@@ -249,8 +255,17 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
           setIsOpen(true);
         }}
       >
-        <h2 className="text-lg font-medium text-gray-900">{show.name}</h2>
-        <p className="text-sm text-gray-700 line-clamp-2">{show.description}</p>
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="flex-1 text-base font-medium text-gray-900 sm:text-lg">
+            {show.name}
+          </h3>
+          <span className="text-sm text-gray-700">
+            {show.mediaType === "tv" ? "TV Show" : "Movie"}
+          </span>
+        </div>
+        <p className="text-xs text-gray-700 line-clamp-2 sm:text-sm">
+          {show.description}
+        </p>
       </div>
     </motion.div>
   );

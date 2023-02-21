@@ -8,7 +8,8 @@ import {
   type SetStateAction,
 } from "react";
 import ReactPlayer from "react-player/lazy";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
+// import { toast } from "react-toastify";
 
 // external imports
 import type { Show } from "@/types/globals";
@@ -62,13 +63,9 @@ const Modal = ({
   const updateShowMutation = api.shows.update.useMutation({
     onSuccess: () => {
       if (isAdded) {
-        toast.error("Removed from favorites", {
-          icon: <XCircle className="aspect-square w-5 text-red-600" />,
-        });
+        toast.error("Removed from favorites");
       } else {
-        toast.success("Added to favorites", {
-          icon: <CheckCircle className="aspect-square w-5 text-green-600" />,
-        });
+        toast.success("Added to favorites");
       }
     },
     onError: (error) => {

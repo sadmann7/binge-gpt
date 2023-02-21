@@ -19,15 +19,15 @@ type AddButtonProps = {
 const AddButton = ({ isAdded, className, ...props }: AddButtonProps) => {
   return (
     <motion.button
+      className={`aspect-square w-5 ${className ?? ""}`}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className={`aspect-square w-5 text-gray-900 ${className ?? ""}`}
       {...props}
     >
       {isAdded ? (
-        <CheckCircle aria-hidden="true" />
+        <CheckCircle aria-hidden="true" className="text-green-600" />
       ) : (
-        <PlusCircle aria-hidden="true" />
+        <PlusCircle aria-hidden="true" className="text-red-600" />
       )}
     </motion.button>
   );
