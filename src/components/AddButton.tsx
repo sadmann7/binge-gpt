@@ -6,7 +6,7 @@ import type {
 } from "react";
 
 // external imports
-import { CheckCircleIcon, PlusCircleIcon } from "lucide-react";
+import { CheckCircle, PlusCircle } from "lucide-react";
 
 type AddButtonProps = {
   isAdded: boolean;
@@ -22,13 +22,12 @@ const AddButton = ({ isAdded, className, ...props }: AddButtonProps) => {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       className={`aspect-square w-5 text-gray-900 ${className ?? ""}`}
-      animate={{ scale: isAdded ? 1.1 : 1 }}
       {...props}
     >
       {isAdded ? (
-        <CheckCircleIcon aria-hidden="true" />
+        <CheckCircle aria-hidden="true" />
       ) : (
-        <PlusCircleIcon aria-hidden="true" />
+        <PlusCircle aria-hidden="true" />
       )}
     </motion.button>
   );

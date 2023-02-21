@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 
 // external imports
 import type { Show } from "@/types/globals";
+import { extractYear } from "@/utils/format";
 import {
   CheckCircle,
   Pause,
@@ -19,8 +20,9 @@ import {
   Volume2,
   VolumeX,
   X,
+  XCircle,
 } from "lucide-react";
-import { extractYear } from "@/utils/format";
+import AddButton from "./AddButton";
 
 type ModalProps = {
   isOpen: boolean;
@@ -32,6 +34,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
   const [trailerId, setTrailerId] = useState<string>("");
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
 
   useEffect(() => {
     if (!show) return;
@@ -56,7 +59,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/75" />
+          <div className="fixed inset-0 bg-black/80" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
@@ -74,20 +77,26 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                   <button
                     type="button"
                     aria-label="close modal"
-                    className="absolute top-4 right-4 z-50 flex items-center rounded-full bg-gray-600 p-1 transition-opacity hover:opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:opacity-100"
+                    className="group absolute top-4 right-4 z-50 flex items-center rounded-full bg-gray-900/80 p-1 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
                     onClick={() => setIsOpen(false)}
                   >
-                    <X aria-hidden="true" className="h-4 w-4 text-white" />
+                    <X
+                      aria-hidden="true"
+                      className="h-4 w-4 text-white group-hover:scale-105 group-active:scale-95"
+                    />
                   </button>
                   <ReactPlayer
                     style={{ position: "absolute", top: 0, left: 0 }}
                     url={`https://www.youtube.com/watch?v=${trailerId}`}
                     width="100%"
                     height="100%"
+                    controls={true}
                     muted={isMuted}
                     playing={isPlaying}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
                   />
-                  <div className="absolute bottom-6 flex w-full items-center justify-between gap-2 px-6">
+                  <div className="absolute bottom-6 hidden w-full items-center justify-between gap-2 px-6">
                     <div className="flex items-center gap-2.5">
                       <button
                         aria-label="control video playback"
@@ -114,7 +123,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                       </button>
                       <button
                         aria-label="remove from my list"
-                        className="grid aspect-square w-7 place-items-center rounded-full bg-gray-700 bg-gray-900/80 ring-2 ring-white transition-colors hover:ring-indigo-400 active:opacity-100"
+                        className="transition- group grid aspect-square w-7 place-items-center rounded-full bg-gray-900/80 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
                         onClick={() => {
                           toast.success("Added to favourites", {
                             icon: (
@@ -125,37 +134,57 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                       >
                         <Plus
                           aria-hidden="true"
-                          className="aspect-square w-5 text-white"
+                          className="aspect-square w-5 text-white transition-transform group-hover:scale-105 group-active:scale-95"
                         />
                       </button>
                       <button
                         aria-label="toggle audio"
-                        className="grid aspect-square w-7 place-items-center rounded-full bg-gray-700 ring-1 ring-white transition-opacity hover:opacity-90 active:opacity-100"
+                        className="group grid aspect-square w-7 place-items-center rounded-full bg-gray-900/80 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
                         onClick={() => setIsMuted(!isMuted)}
                       >
                         {isMuted ? (
                           <VolumeX
                             aria-hidden="true"
-                            className="aspect-square w-4 text-white"
+                            className="aspect-square w-4 text-white transition-transform group-hover:scale-105 group-active:scale-95"
                           />
                         ) : (
                           <Volume2
                             aria-hidden="true"
-                            className="aspect-square w-4 text-white"
+                            className="aspect-square w-4 text-white transition-transform group-hover:scale-105 group-active:scale-95"
                           />
                         )}
                       </button>
                     </div>
                   </div>
                 </div>
-                <div className="mx-6 my-4 grid gap-2">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
-                  >
-                    {show.title ?? show.original_title ?? show.name}
-                  </Dialog.Title>
-                  <div className="flex items-center space-x-2 text-xs sm:text-sm">
+                <div className="mx-6 mt-4 mb-6 grid gap-2">
+                  <div className="flex items-center justify-between gap-5">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
+                    >
+                      {show.title ?? show.original_title ?? show.name}
+                    </Dialog.Title>
+                    <AddButton
+                      aria-label="add to favourites"
+                      isAdded={isAdded}
+                      onClick={() => {
+                        setIsAdded(!isAdded);
+                        isAdded
+                          ? toast.error("Removed from favourites", {
+                              icon: (
+                                <XCircle className="aspect-square w-5 text-red-600" />
+                              ),
+                            })
+                          : toast.success("Added to favourites", {
+                              icon: (
+                                <CheckCircle className="aspect-square w-5 text-green-600" />
+                              ),
+                            });
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
                     {show.vote_average ? (
                       <Fragment>
                         <span className="font-medium text-green-600">

@@ -163,6 +163,10 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
     },
   });
 
+  if (findShowMutation.isError) {
+    toast.error(findShowMutation.error?.message);
+  }
+
   return (
     <Fragment>
       {findShowMutation.isSuccess ? (
@@ -173,7 +177,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
         />
       ) : null}
       <div
-        className="flex flex-col gap-2"
+        className="flex cursor-pointer flex-col gap-3 rounded-md bg-white p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
