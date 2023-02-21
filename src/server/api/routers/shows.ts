@@ -89,4 +89,57 @@ export const showsRouter = createTRPCRouter({
       const showWithVideos = (await anotherResponse.json()) as Show;
       return showWithVideos;
     }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        tmdbId: z.number(),
+        name: z.string(),
+        description: z.string(),
+        favoriteCount: z.number(),
+        mediaType: z.nativeEnum(MEDIA_TYPE),
+        trailerId: z.string(),
+        genres: z.array(z.string()),
+        releaseDate: z.string(),
+        voteAverage: z.number().min(0),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const show = await ctx.prisma.savedShow.upsert({
+        where: {
+          tmdbId: input.tmdbId,
+        },
+        update: {
+          favoriteCount: {
+            increment: input.favoriteCount,
+          },
+        },
+        create: {
+          tmdbId: input.tmdbId,
+          name: input.name,
+          description: input.description,
+          mediaType: input.mediaType,
+          favoriteCount: input.favoriteCount,
+          trailerId: input.trailerId,
+          genres: input.genres,
+          releaseDate: input.releaseDate,
+          voteAverage: input.voteAverage,
+        },
+      });
+      if (!show) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not save show",
+        });
+      }
+      if (show.favoriteCount <= 0) {
+        await ctx.prisma.savedShow.delete({
+          where: {
+            tmdbId: input.tmdbId,
+          },
+        });
+      }
+
+      return show;
+    }),
 });

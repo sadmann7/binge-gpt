@@ -8,27 +8,20 @@ datasource db {
 }
 
 model SavedShow {
-    id          String     @id @default(cuid())
-    tmdbId      Int        @unique
-    name        String
-    description String?
-    favourites  Int        @default(0)
-    poster      String?
-    mediaType   MEDIA_TYPE @default(tv)
-    trailer     String?
-    genres      Genre[]
-    releaseDate DateTime?
-    voteAverage Float?
-    voteCount   Int?
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-}
-
-model Genre {
-    id          String     @id @default(cuid())
-    name        String
-    SavedShow   SavedShow? @relation(fields: [savedShowId], references: [id], onDelete: Cascade)
-    savedShowId String?
+    id            String     @id @default(cuid())
+    tmdbId        Int        @unique
+    name          String
+    description   String?
+    favoriteCount Int        @default(0)
+    poster        String?
+    mediaType     MEDIA_TYPE @default(tv)
+    trailerId     String?
+    genres        String[]
+    releaseDate   String?
+    voteAverage   Float?
+    voteCount     Int?
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
 }
 
 enum MEDIA_TYPE {

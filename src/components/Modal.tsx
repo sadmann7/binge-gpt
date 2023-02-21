@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
+import type { MEDIA_TYPE } from "@prisma/client";
 import {
   Fragment,
   useEffect,
@@ -11,6 +12,7 @@ import { toast } from "react-toastify";
 
 // external imports
 import type { Show } from "@/types/globals";
+import { api } from "@/utils/api";
 import { extractYear } from "@/utils/format";
 import {
   CheckCircle,
@@ -27,18 +29,27 @@ import AddButton from "./AddButton";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  mediaType: MEDIA_TYPE;
   show: Show;
+  isAdded: boolean;
+  setIsAdded: Dispatch<SetStateAction<boolean>>;
 };
 
-const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
+const Modal = ({
+  isOpen,
+  setIsOpen,
+  mediaType,
+  show,
+  isAdded,
+  setIsAdded,
+}: ModalProps) => {
   const [trailerId, setTrailerId] = useState<string>("");
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
 
+  // set trailerId
   useEffect(() => {
     if (!show) return;
-
     if (show.videos) {
       const trailerIndex = show.videos.results.findIndex(
         (item) => item.type === "Trailer"
@@ -46,6 +57,24 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
       setTrailerId(show.videos.results[trailerIndex]?.key ?? "");
     }
   }, [show]);
+
+  // update show mutation
+  const updateShowMutation = api.shows.update.useMutation({
+    onSuccess: () => {
+      if (isAdded) {
+        toast.error("Removed from favorites", {
+          icon: <XCircle className="aspect-square w-5 text-red-600" />,
+        });
+      } else {
+        toast.success("Added to favorites", {
+          icon: <CheckCircle className="aspect-square w-5 text-green-600" />,
+        });
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -125,7 +154,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                         aria-label="remove from my list"
                         className="transition- group grid aspect-square w-7 place-items-center rounded-full bg-gray-900/80 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
                         onClick={() => {
-                          toast.success("Added to favourites", {
+                          toast.success("Added to favorites", {
                             icon: (
                               <CheckCircle className="aspect-square w-5 text-green-600" />
                             ),
@@ -170,17 +199,18 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                       isAdded={isAdded}
                       onClick={() => {
                         setIsAdded(!isAdded);
-                        isAdded
-                          ? toast.error("Removed from favourites", {
-                              icon: (
-                                <XCircle className="aspect-square w-5 text-red-600" />
-                              ),
-                            })
-                          : toast.success("Added to favourites", {
-                              icon: (
-                                <CheckCircle className="aspect-square w-5 text-green-600" />
-                              ),
-                            });
+                        updateShowMutation.mutate({
+                          tmdbId: show.id,
+                          name: show.title ?? show.original_title ?? show.name,
+                          description: show.overview ?? "",
+                          mediaType: mediaType,
+                          favoriteCount: isAdded ? -1 : 1,
+                          trailerId: trailerId,
+                          genres: show.genres.map((genre) => genre.name ?? ""),
+                          releaseDate:
+                            show.release_date ?? show.first_air_date ?? "",
+                          voteAverage: show.vote_average ?? 0,
+                        });
                       }}
                     />
                   </div>

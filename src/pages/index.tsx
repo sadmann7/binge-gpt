@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { MEDIA_TYPE } from "@prisma/client";
 import Head from "next/head";
 import { Fragment, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -152,6 +153,7 @@ Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
 const ShowCard = ({ show }: { show: GeneratedShow }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
 
   // find show mutation
   const findShowMutation = api.shows.findOne.useMutation({
@@ -173,7 +175,10 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
         <Modal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          mediaType={show.mediaType as MEDIA_TYPE}
           show={findShowMutation.data}
+          isAdded={isAdded}
+          setIsAdded={setIsAdded}
         />
       ) : null}
       <div
