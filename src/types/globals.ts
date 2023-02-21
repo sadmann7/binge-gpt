@@ -39,6 +39,9 @@ export type Show = {
     iso_3166_1: string;
     name: string;
   }[];
+  number_of_seasons?: number;
+  number_of_episodes?: number;
+  episode_run_time?: number[];
   seasons?: {
     air_date: string;
     episode_count: number;
@@ -49,6 +52,8 @@ export type Show = {
     season_number: number;
   }[];
   release_date: string;
+  first_air_date?: string;
+  last_air_date?: string;
   revenue: number;
   runtime: number | null;
   spoken_languages: {

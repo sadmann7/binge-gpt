@@ -10,7 +10,7 @@ import ReactPlayer from "react-player/lazy";
 import { toast } from "react-toastify";
 
 // external imports
-import type { Genre, Show } from "@/types/globals";
+import type { Show } from "@/types/globals";
 import {
   CheckCircle,
   Pause,
@@ -20,6 +20,7 @@ import {
   VolumeX,
   X,
 } from "lucide-react";
+import { extractYear } from "@/utils/format";
 
 type ModalProps = {
   isOpen: boolean;
@@ -29,7 +30,6 @@ type ModalProps = {
 
 const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
   const [trailerId, setTrailerId] = useState<string>("");
-  const [genres, setGenres] = useState<Genre[]>([]);
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -41,10 +41,6 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
         (item) => item.type === "Trailer"
       );
       setTrailerId(show.videos.results[trailerIndex]?.key ?? "");
-    }
-
-    if (show.genres) {
-      setGenres(show.genres);
     }
   }, [show]);
 
@@ -81,10 +77,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                     className="absolute top-4 right-4 z-50 flex items-center rounded-full bg-gray-600 p-1 transition-opacity hover:opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:opacity-100"
                     onClick={() => setIsOpen(false)}
                   >
-                    <X
-                      aria-hidden="true"
-                      className="aspect-square w-4 text-white"
-                    />
+                    <X aria-hidden="true" className="h-4 w-4 text-white" />
                   </button>
                   <ReactPlayer
                     style={{ position: "absolute", top: 0, left: 0 }}
@@ -98,7 +91,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                     <div className="flex items-center gap-2.5">
                       <button
                         aria-label="control video playback"
-                        className="flex items-center gap-1 rounded-sm bg-white px-2.5 py-1 text-sm text-black transition-opacity hover:opacity-90 active:opacity-100 md:text-base"
+                        className="flex items-center gap-1 rounded-sm bg-gray-200 px-2.5 py-1 text-sm text-black transition-colors hover:bg-white active:bg-gray-200 sm:text-base"
                         onClick={() => setIsPlaying(!isPlaying)}
                       >
                         {isPlaying ? (
@@ -121,7 +114,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                       </button>
                       <button
                         aria-label="remove from my list"
-                        className="grid aspect-square w-7 place-items-center rounded-full bg-gray-700 ring-1 ring-white transition-opacity hover:opacity-90 active:opacity-100"
+                        className="grid aspect-square w-7 place-items-center rounded-full bg-gray-700 bg-gray-900/80 ring-2 ring-white transition-colors hover:ring-indigo-400 active:opacity-100"
                         onClick={() => {
                           toast.success("Added to favourites", {
                             icon: (
@@ -155,43 +148,59 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="mx-6 my-7 grid gap-2">
+                <div className="mx-6 my-4 grid gap-2">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
                   >
                     {show.title ?? show.original_title ?? show.name}
                   </Dialog.Title>
-                  <div className="flex items-center space-x-2 text-xs md:text-sm">
-                    <p className="font-medium text-green-600">
-                      {Math.round((Number(show.vote_average) / 10) * 100) ??
-                        "-"}
-                      % Match
-                    </p>
-                    <p>{show.release_date ?? "-"}</p>
-                    <p>{show.original_language.toUpperCase() ?? "-"}</p>
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm">
+                    {show.vote_average ? (
+                      <Fragment>
+                        <span className="font-medium text-green-600">
+                          {Math.round((Number(show.vote_average) / 10) * 100)}%
+                        </span>
+                        <span>|</span>
+                      </Fragment>
+                    ) : null}
+                    {show.release_date || show.first_air_date ? (
+                      <Fragment>
+                        <span>
+                          {extractYear(
+                            show.release_date ?? show.first_air_date
+                          )}
+                        </span>
+                        <span>|</span>
+                      </Fragment>
+                    ) : null}
+                    {show.number_of_seasons ? (
+                      <Fragment>
+                        <span>{show.number_of_seasons} Seasons</span>
+                        <span>|</span>
+                      </Fragment>
+                    ) : null}
+                    {show.original_language ? (
+                      <span>{show.original_language.toUpperCase()}</span>
+                    ) : null}
                   </div>
-                  <a
-                    href={show.homepage}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-xs md:text-sm"
-                  >
-                    <span className="font-medium text-gray-900">Watch on:</span>
-                    {show.homepage ?? "-"}
-                  </a>
-                  <p className="text-xs line-clamp-3 md:text-sm">
+                  <div className="text-xs sm:text-sm">
+                    <span className="font-medium text-gray-900">Watch on:</span>{" "}
+                    <a
+                      href={show.homepage}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {show.homepage ?? "-"}
+                    </a>
+                  </div>
+                  <p className="text-xs line-clamp-3 sm:text-sm">
                     {show.overview ?? "-"}
                   </p>
-                  <div className="flex items-center gap-2 text-xs md:text-sm">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
                     <span className="font-medium text-gray-900">Genres:</span>
-                    {genres.map((genre) => genre.name).join(", ")}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs md:text-sm">
-                    <span className="font-medium text-gray-900">
-                      Total Votes:
-                    </span>
-                    {show.vote_count ?? "-"}
+                    {show.genres.map((genre) => genre.name).join(", ")}
                   </div>
                 </div>
               </Dialog.Panel>

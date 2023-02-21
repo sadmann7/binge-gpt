@@ -9,8 +9,10 @@ datasource db {
 
 model SavedShow {
     id          String     @id @default(cuid())
+    tmdbId      Int        @unique
     name        String
     description String?
+    favourites  Int        @default(0)
     poster      String?
     mediaType   MEDIA_TYPE @default(tv)
     trailer     String?
