@@ -11,7 +11,15 @@ import { toast } from "react-toastify";
 
 // external imports
 import type { Genre, Show } from "@/types/globals";
-import { Pause, Play, Plus, ThumbsUp, X } from "lucide-react";
+import {
+  CheckCircle,
+  Pause,
+  Play,
+  Plus,
+  Volume2,
+  VolumeX,
+  X,
+} from "lucide-react";
 
 type ModalProps = {
   isOpen: boolean;
@@ -94,28 +102,32 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                         onClick={() => setIsPlaying(!isPlaying)}
                       >
                         {isPlaying ? (
-                          <>
+                          <Fragment>
                             <Pause
                               aria-hidden="true"
                               className="aspect-square w-5"
                             />
                             <p>Pause</p>
-                          </>
+                          </Fragment>
                         ) : (
-                          <>
+                          <Fragment>
                             <Play
                               aria-hidden="true"
                               className="aspect-square w-5"
                             />
                             <p>Play</p>
-                          </>
+                          </Fragment>
                         )}
                       </button>
                       <button
                         aria-label="remove from my list"
                         className="grid aspect-square w-7 place-items-center rounded-full bg-gray-700 ring-1 ring-white transition-opacity hover:opacity-90 active:opacity-100"
                         onClick={() => {
-                          toast.success("Added to favourites");
+                          toast.success("Added to favourites", {
+                            icon: (
+                              <CheckCircle className="aspect-square w-5 text-green-600" />
+                            ),
+                          });
                         }}
                       >
                         <Plus
@@ -124,13 +136,21 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                         />
                       </button>
                       <button
-                        aria-label="thumb up"
+                        aria-label="toggle audio"
                         className="grid aspect-square w-7 place-items-center rounded-full bg-gray-700 ring-1 ring-white transition-opacity hover:opacity-90 active:opacity-100"
+                        onClick={() => setIsMuted(!isMuted)}
                       >
-                        <ThumbsUp
-                          aria-hidden="true"
-                          className="aspect-square w-4 text-white"
-                        />
+                        {isMuted ? (
+                          <VolumeX
+                            aria-hidden="true"
+                            className="aspect-square w-4 text-white"
+                          />
+                        ) : (
+                          <Volume2
+                            aria-hidden="true"
+                            className="aspect-square w-4 text-white"
+                          />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -143,7 +163,7 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                     {show.title ?? show.original_title ?? show.name}
                   </Dialog.Title>
                   <div className="flex items-center space-x-2 text-xs md:text-sm">
-                    <p className=" text-green-600">
+                    <p className="font-medium text-green-600">
                       {Math.round((Number(show.vote_average) / 10) * 100) ??
                         "-"}
                       % Match
@@ -151,15 +171,26 @@ const Modal = ({ isOpen, setIsOpen, show }: ModalProps) => {
                     <p>{show.release_date ?? "-"}</p>
                     <p>{show.original_language.toUpperCase() ?? "-"}</p>
                   </div>
+                  <a
+                    href={show.homepage}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 text-xs md:text-sm"
+                  >
+                    <span className="font-medium text-gray-900">Watch on:</span>
+                    {show.homepage ?? "-"}
+                  </a>
                   <p className="text-xs line-clamp-3 md:text-sm">
                     {show.overview ?? "-"}
                   </p>
                   <div className="flex items-center gap-2 text-xs md:text-sm">
-                    <span className="text-gray-400">Genres:</span>
+                    <span className="font-medium text-gray-900">Genres:</span>
                     {genres.map((genre) => genre.name).join(", ")}
                   </div>
                   <div className="flex items-center gap-2 text-xs md:text-sm">
-                    <span className="text-gray-400">Total Votes:</span>
+                    <span className="font-medium text-gray-900">
+                      Total Votes:
+                    </span>
                     {show.vote_count ?? "-"}
                   </div>
                 </div>

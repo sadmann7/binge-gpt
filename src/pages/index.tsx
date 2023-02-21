@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Head from "next/head";
+import { Fragment, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import Balancer from "react-wrap-balancer";
@@ -12,7 +13,40 @@ import Modal from "@/components/Modal";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import type { GeneratedShow } from "@/types/globals";
 import { api } from "@/utils/api";
-import { Fragment, useState } from "react";
+
+const shows: GeneratedShow[] = [
+  {
+    name: "Stranger Things",
+    description:
+      "When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.",
+    mediaType: "tv",
+  },
+  {
+    name: "The Witcher",
+    description:
+      "Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts.",
+    mediaType: "tv",
+  },
+  {
+    name: "The Umbrella Academy",
+    description:
+      "A dysfunctional family of superheroes comes together to solve the mystery of their father's death, the threat of the apocalypse and more.",
+
+    mediaType: "tv",
+  },
+  {
+    name: "Dark",
+    description:
+      "A missing child causes four families to help each other for answers. What they could not imagine is that this mystery would be connected to innumerable other secrets of the small town.",
+    mediaType: "tv",
+  },
+  {
+    name: "The Last of Us",
+    description:
+      "Twenty years after modern civilization has been destroyed, Joel, a hardened survivor, is hired to smuggle Ellie, a 14-year-old girl, out of an oppressive quarantine zone. What starts as a small job soon becomes a brutal, heartbreaking journey, as they both must traverse the United States and depend on each other for survival.",
+    mediaType: "tv",
+  },
+];
 
 const schema = z.object({
   show: z.string().min(1, { message: "Please enter a show" }),
@@ -20,16 +54,6 @@ const schema = z.object({
 type Inputs = z.infer<typeof schema>;
 
 const Home: NextPageWithLayout = () => {
-  // generate show mutation
-  const generatedShowMutation = api.openai.generate.useMutation({
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   // generateAI show mutation
   const generateAIShowMutation = api.openai.generateAI.useMutation({
     onSuccess: (data) => {
@@ -44,9 +68,9 @@ const Home: NextPageWithLayout = () => {
   const { register, handleSubmit, formState } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    // await generatedShowMutation.mutateAsync({ ...data });
-    await generateAIShowMutation.mutateAsync({ ...data });
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    // await generateAIShowMutation.mutateAsync({ ...data });
+    console.log(data);
   };
 
   return (
@@ -100,7 +124,7 @@ const Home: NextPageWithLayout = () => {
           </Button>
         </form>
         <div>
-          {generateAIShowMutation.isError ? (
+          {/* {generateAIShowMutation.isError ? (
             <p className="text-red-500">
               {generateAIShowMutation.error?.message}
             </p>
@@ -110,7 +134,12 @@ const Home: NextPageWithLayout = () => {
                 <ShowCard key={show.name} show={show} />
               ))}
             </div>
-          ) : null}
+          ) : null} */}
+          <div className="grid gap-2">
+            {shows
+              ? shows.map((show) => <ShowCard key={show.name} show={show} />)
+              : null}
+          </div>
         </div>
       </main>
     </>

@@ -1,7 +1,7 @@
 import { env } from "@/env.mjs";
 import type { Show } from "@/types/globals";
 import { configuration } from "@/utils/openai";
-import { MEDIA_TYPE } from "@prisma/client";
+import type { MEDIA_TYPE } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
@@ -151,69 +151,6 @@ export const openaiRouter = createTRPCRouter({
             name: name?.replace(/[0-9]+. /, "").trim(),
             description: description?.trim(),
             mediaType: mediaType?.toLowerCase().trim() as MEDIA_TYPE,
-          };
-        });
-      return formattedData;
-    }),
-
-  getShow: publicProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        mediaType: z.nativeEnum(MEDIA_TYPE),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!configuration.apiKey) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            "OpenAI API key not configured, please follow instructions in README.md",
-        });
-      }
-
-      const prompt = `Find the accurate TMDB id of ${input.name}. You can use the following template: 1. Name - TMDB id.`;
-
-      if (!prompt) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred during your request.",
-        });
-      }
-
-      const completion = await ctx.openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        temperature: 0,
-        max_tokens: 50,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        stream: false,
-        n: 1,
-      });
-      if (!completion.data.choices) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred during your request.",
-        });
-      }
-      if (!completion.data.choices[0]?.text) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred during your request.",
-        });
-      }
-
-      const formattedData = completion.data.choices[0].text
-        .split("\n")
-        .filter((show) => show !== "")
-        .map((show) => {
-          const [name, id] = show.split("- ");
-          return {
-            name: name?.replace(/[0-9]+. /, "").trim(),
-            id: id ? parseInt(id) : id,
-            mediaType: input.mediaType.toLowerCase().trim() as MEDIA_TYPE,
           };
         });
       return formattedData;
