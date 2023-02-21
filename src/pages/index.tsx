@@ -8,9 +8,11 @@ import type { NextPageWithLayout } from "./_app";
 
 // external imports
 import Button from "@/components/Button";
+import Modal from "@/components/Modal";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import type { GeneratedShow } from "@/types/globals";
 import { api } from "@/utils/api";
+import { Fragment, useState } from "react";
 
 const schema = z.object({
   show: z.string().min(1, { message: "Please enter a show" }),
@@ -120,6 +122,8 @@ export default Home;
 Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
 const ShowCard = ({ show }: { show: GeneratedShow }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   // find show mutation
   const findShowMutation = api.shows.findOne.useMutation({
     onSuccess: (data) => {
@@ -131,18 +135,28 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
   });
 
   return (
-    <div
-      className="flex flex-col gap-2"
-      onClick={() => {
-        if (!show.name || !show.mediaType) return;
-        findShowMutation.mutate({
-          query: show.name,
-          mediaType: show.mediaType,
-        });
-      }}
-    >
-      <h2 className="text-lg font-medium text-gray-900">{show.name}</h2>
-      <p className="text-sm text-gray-700 line-clamp-2">{show.description}</p>
-    </div>
+    <Fragment>
+      {findShowMutation.isSuccess ? (
+        <Modal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          show={findShowMutation.data}
+        />
+      ) : null}
+      <div
+        className="flex flex-col gap-2"
+        onClick={() => {
+          if (!show.name || !show.mediaType) return;
+          findShowMutation.mutate({
+            query: show.name,
+            mediaType: show.mediaType,
+          });
+          setIsOpen(true);
+        }}
+      >
+        <h2 className="text-lg font-medium text-gray-900">{show.name}</h2>
+        <p className="text-sm text-gray-700 line-clamp-2">{show.description}</p>
+      </div>
+    </Fragment>
   );
 };

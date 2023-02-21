@@ -63,7 +63,10 @@ export const openaiRouter = createTRPCRouter({
         .map((show) => {
           const [mediaType, id] = show.split(": ");
           return {
-            mediaType: mediaType?.replace(/[0-9]+. /, "").toLowerCase(),
+            mediaType: mediaType
+              ?.replace(/[0-9]+. /, "")
+              .toLowerCase()
+              .trim(),
             id: id ? parseInt(id) : id,
           };
         });
@@ -145,9 +148,9 @@ export const openaiRouter = createTRPCRouter({
         .map((show) => {
           const [name, description, mediaType] = show.split("- ");
           return {
-            name: name?.replace(/[0-9]+. /, ""),
+            name: name?.replace(/[0-9]+. /, "").trim(),
             description: description?.trim(),
-            mediaType: mediaType?.toLowerCase() as MEDIA_TYPE,
+            mediaType: mediaType?.toLowerCase().trim() as MEDIA_TYPE,
           };
         });
       return formattedData;
@@ -208,9 +211,9 @@ export const openaiRouter = createTRPCRouter({
         .map((show) => {
           const [name, id] = show.split("- ");
           return {
-            name: name?.replace(/[0-9]+. /, ""),
+            name: name?.replace(/[0-9]+. /, "").trim(),
             id: id ? parseInt(id) : id,
-            mediaType: input.mediaType.trim().toLowerCase(),
+            mediaType: input.mediaType.toLowerCase().trim() as MEDIA_TYPE,
           };
         });
       return formattedData;
