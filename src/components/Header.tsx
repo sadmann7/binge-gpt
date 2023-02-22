@@ -24,6 +24,7 @@ const Header = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // handle scroll
   const handleScroll = () => {
     if (window.scrollY > 0) {
       setIsScrolled(true);

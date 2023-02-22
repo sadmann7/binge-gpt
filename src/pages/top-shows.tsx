@@ -15,6 +15,7 @@ import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { extractYear } from "@/utils/format";
 import type { SavedShow } from "@prisma/client";
+import Button from "@/components/Button";
 
 const TopShows: NextPageWithLayout = () => {
   // shows query
@@ -70,26 +71,17 @@ const TopShows: NextPageWithLayout = () => {
             ))
           )}
         </motion.div>
-        <button
+        <Button
           aria-label="load more shows"
-          className={
-            showsQuery.hasNextPage
-              ? "block rounded-md bg-gray-100 px-4 py-2 font-semibold text-gray-900 shadow-md ring-1 ring-gray-500 transition enabled:hover:bg-gray-200 enabled:active:bg-gray-100 disabled:cursor-not-allowed"
-              : "hidden"
-          }
+          variant="tertiary"
+          className={showsQuery.hasNextPage ? "block" : "hidden"}
           ref={ref}
           onClick={() => void showsQuery.fetchNextPage()}
+          isLoading={showsQuery.isFetchingNextPage}
           disabled={!showsQuery.hasNextPage || showsQuery.isFetchingNextPage}
         >
-          {showsQuery.isFetchingNextPage ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className="aspect-square w-4 animate-spin rounded-full border-2 border-solid border-gray-100 border-t-transparent" />
-              <span>Loading...</span>
-            </div>
-          ) : showsQuery.hasNextPage ? (
-            "Load more shows"
-          ) : null}
-        </button>
+          {showsQuery.hasNextPage ? "Load more shows" : `That's all folks!`}
+        </Button>
       </main>
     </>
   );

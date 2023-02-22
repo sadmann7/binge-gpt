@@ -110,7 +110,7 @@ const Home: NextPageWithLayout = () => {
         <title>WatchCopilot</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-28 mb-14 flex w-full max-w-5xl flex-col items-center gap-8 px-4"
+        className="container mx-auto mt-28 mb-14 flex w-full max-w-5xl flex-col items-center px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"
@@ -134,7 +134,7 @@ const Home: NextPageWithLayout = () => {
         </motion.div>
         <motion.form
           aria-label="generate show from"
-          className="grid w-full max-w-3xl gap-5"
+          className="mt-8 grid w-full max-w-3xl gap-5"
           variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
         >
@@ -156,7 +156,8 @@ const Home: NextPageWithLayout = () => {
             ) : null}
           </fieldset>
           <Button
-            aria-label="discover your showsw"
+            aria-label="discover your shows"
+            variant="primary"
             className="w-full"
             isLoading={generateAIShowMutation.isLoading}
             disabled={generateAIShowMutation.isLoading}
@@ -165,7 +166,7 @@ const Home: NextPageWithLayout = () => {
           </Button>
         </motion.form>
         <motion.div
-          className="w-full max-w-3xl"
+          className="mt-12 w-full max-w-3xl"
           ref={generatedRef}
           variants={itemFadeDown}
         >
