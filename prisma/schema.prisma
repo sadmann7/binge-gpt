@@ -12,8 +12,8 @@ model SavedShow {
     tmdbId        Int        @unique
     name          String
     description   String?
+    image         String?
     favoriteCount Int        @default(0)
-    poster        String?
     mediaType     MEDIA_TYPE @default(tv)
     trailerId     String?
     genres        String[]

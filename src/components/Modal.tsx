@@ -33,6 +33,7 @@ type ModalProps = {
   show: Show;
   isLiked: boolean;
   setIsLiked: Dispatch<SetStateAction<boolean>>;
+  isLikeButtonVisible?: boolean;
 };
 
 const Modal = ({
@@ -42,6 +43,7 @@ const Modal = ({
   show,
   isLiked,
   setIsLiked,
+  isLikeButtonVisible = true,
 }: ModalProps) => {
   const [trailerId, setTrailerId] = useState<string>("");
   const [isMuted, setIsMuted] = useState(false);
@@ -183,35 +185,48 @@ const Modal = ({
                   </div>
                 </div>
                 <div className="mx-6 mt-4 mb-6 grid gap-2">
-                  <div className="flex items-center justify-between gap-5">
+                  {isLikeButtonVisible ? (
+                    <div className="flex items-center justify-between gap-5">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
+                      >
+                        {show.title ?? show.original_title ?? show.name}
+                      </Dialog.Title>
+                      <LikeButton
+                        aria-label={
+                          isLiked ? "add to favorites" : "remove from favorites"
+                        }
+                        isLiked={isLiked}
+                        onClick={() => {
+                          setIsLiked(!isLiked);
+                          updateShowMutation.mutate({
+                            tmdbId: show.id,
+                            name:
+                              show.title ?? show.original_title ?? show.name,
+                            description: show.overview ?? "",
+                            image: show.poster_path ?? show.backdrop_path ?? "",
+                            mediaType: mediaType,
+                            favoriteCount: isLiked ? -1 : 1,
+                            trailerId: trailerId,
+                            genres: show.genres.map(
+                              (genre) => genre.name ?? ""
+                            ),
+                            releaseDate:
+                              show.release_date ?? show.first_air_date ?? "",
+                            voteAverage: show.vote_average ?? 0,
+                          });
+                        }}
+                      />
+                    </div>
+                  ) : (
                     <Dialog.Title
                       as="h3"
                       className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
                     >
                       {show.title ?? show.original_title ?? show.name}
                     </Dialog.Title>
-                    <LikeButton
-                      aria-label={
-                        isLiked ? "add to favorites" : "remove from favorites"
-                      }
-                      isLiked={isLiked}
-                      onClick={() => {
-                        setIsLiked(!isLiked);
-                        updateShowMutation.mutate({
-                          tmdbId: show.id,
-                          name: show.title ?? show.original_title ?? show.name,
-                          description: show.overview ?? "",
-                          mediaType: mediaType,
-                          favoriteCount: isLiked ? -1 : 1,
-                          trailerId: trailerId,
-                          genres: show.genres.map((genre) => genre.name ?? ""),
-                          releaseDate:
-                            show.release_date ?? show.first_air_date ?? "",
-                          voteAverage: show.vote_average ?? 0,
-                        });
-                      }}
-                    />
-                  </div>
+                  )}
                   <div className="flex items-center gap-2 text-xs sm:text-sm">
                     {show.vote_average ? (
                       <Fragment>

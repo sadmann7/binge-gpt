@@ -98,6 +98,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
           show={findShowMutation.data}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
+          isLikeButtonVisible={false}
         />
       ) : null}
       <div
@@ -122,6 +123,20 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
         <p className="text-xs text-gray-700 line-clamp-2 sm:text-sm">
           {show.description}
         </p>
+        <div className="mt-4 flex items-center">
+          <span className="text-sm font-medium text-yellow-500">
+            {show.favoriteCount}
+          </span>
+          <svg
+            className="ml-2 h-4 w-4 fill-current text-yellow-500"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-.81-11.72a1 1 0 0 0 1.62 1.16l2.93-2.36a1 1 0 0 0-1.23-1.58l-2.12 1.71-1.04-.87z"
+            />
+          </svg>
+        </div>
       </div>
     </motion.div>
   );
