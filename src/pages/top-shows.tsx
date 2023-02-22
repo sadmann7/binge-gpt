@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import Head from "next/head";
-import { useState } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useInView } from "react-intersection-observer";
 import type { NextPageWithLayout } from "./_app";
 
 // external imports
@@ -11,27 +13,33 @@ import ErrorScreen from "@/screens/ErrorScreen";
 import LoadingScreen from "@/screens/LoadingScreen";
 import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
-import type { SavedShow } from "@prisma/client";
-import Image from "next/image";
 import { extractYear } from "@/utils/format";
+import type { SavedShow } from "@prisma/client";
 
 const TopShows: NextPageWithLayout = () => {
   // shows query
   const showsQuery = api.shows.getPaginated.useInfiniteQuery(
     {
-      limit: 10,
+      limit: 4,
     },
     {
       getNextPageParam: (lastPage) => {
         if (lastPage.nextCursor) {
-          return {
-            after: lastPage.nextCursor,
-          };
+          return lastPage.nextCursor;
         }
         return undefined;
       },
     }
   );
+
+  // infinite scroll
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (!inView && showsQuery.hasNextPage) return;
+    if (inView) {
+      void showsQuery.fetchNextPage();
+    }
+  }, [inView, showsQuery]);
 
   if (showsQuery.isLoading) {
     return <LoadingScreen />;
@@ -47,11 +55,11 @@ const TopShows: NextPageWithLayout = () => {
         <title>Top Shows | WatchCopilot</title>
       </Head>
       <main className="container mx-auto mt-20 mb-14 grid w-full max-w-5xl gap-8 px-4">
-        <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
           Top Shows
         </h1>
         <motion.div
-          className="grid w-full grid-cols-1 gap-4 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+          className="grid w-full grid-cols-1 gap-5 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
           initial="hidden"
           animate="visible"
           variants={containerReveal}
@@ -62,6 +70,26 @@ const TopShows: NextPageWithLayout = () => {
             ))
           )}
         </motion.div>
+        <button
+          aria-label="load more shows"
+          className={
+            showsQuery.hasNextPage
+              ? "block rounded-md bg-gray-100 px-4 py-2 font-semibold text-gray-900 shadow-md ring-1 ring-gray-500 transition enabled:hover:bg-gray-200 enabled:active:bg-gray-100 disabled:cursor-not-allowed"
+              : "hidden"
+          }
+          ref={ref}
+          onClick={() => void showsQuery.fetchNextPage()}
+          disabled={!showsQuery.hasNextPage || showsQuery.isFetchingNextPage}
+        >
+          {showsQuery.isFetchingNextPage ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="aspect-square w-4 animate-spin rounded-full border-2 border-solid border-gray-100 border-t-transparent" />
+              <span>Loading...</span>
+            </div>
+          ) : showsQuery.hasNextPage ? (
+            "Load more shows"
+          ) : null}
+        </button>
       </main>
     </>
   );

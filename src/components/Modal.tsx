@@ -45,6 +45,7 @@ const Modal = ({
   setIsLiked,
   isLikeButtonVisible = true,
 }: ModalProps) => {
+  const apiUtils = api.useContext();
   const [trailerId, setTrailerId] = useState<string>("");
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -62,12 +63,31 @@ const Modal = ({
 
   // update show mutation
   const updateShowMutation = api.shows.update.useMutation({
-    onSuccess: () => {
+    onMutate: async () => {
       if (isLiked) {
         toast.error("Removed from favorites");
       } else {
         toast.success("Added to favorites");
       }
+      await apiUtils.shows.getPaginated.cancel();
+      apiUtils.shows.getPaginated.setInfiniteData({ limit: 10 }, (data) => {
+        if (!data) {
+          return {
+            pages: [],
+            pageParams: [],
+          };
+        }
+        return {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            savedShows: page.savedShows.map((savedShow) => ({
+              ...savedShow,
+              favoriteCount: isLiked ? -1 : 1,
+            })),
+          })),
+        };
+      });
     },
     onError: (error) => {
       toast.error(error.message);
