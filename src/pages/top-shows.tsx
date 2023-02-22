@@ -151,7 +151,9 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
         <Image
           src={
             show.image
-              ? `https://image.tmdb.org/t/p/w500/${show.image as string}`
+              ? `https://image.tmdb.org/t/p/w220_and_h330_face/${
+                  show.image as string
+                }`
               : "https://via.placeholder.com/500x500"
           }
           alt={show.name}
