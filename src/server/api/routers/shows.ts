@@ -90,6 +90,34 @@ export const showsRouter = createTRPCRouter({
       return showWithVideos;
     }),
 
+  getPaginated: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const savedShows = await ctx.prisma.savedShow.findMany({
+        take: input.limit + 1,
+        where: {},
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        orderBy: {
+          favoriteCount: "desc",
+        },
+      });
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (savedShows.length > input.limit) {
+        const nextItem = savedShows.pop();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        nextCursor = nextItem!.id;
+      }
+      return {
+        savedShows,
+        nextCursor,
+      };
+    }),
+
   update: publicProcedure
     .input(
       z.object({
@@ -105,7 +133,7 @@ export const showsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const show = await ctx.prisma.savedShow.upsert({
+      const savedShow = await ctx.prisma.savedShow.upsert({
         where: {
           tmdbId: input.tmdbId,
         },
@@ -126,13 +154,13 @@ export const showsRouter = createTRPCRouter({
           voteAverage: input.voteAverage,
         },
       });
-      if (!show) {
+      if (!savedShow) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Could not save show",
         });
       }
-      if (show.favoriteCount <= 0) {
+      if (savedShow.favoriteCount <= 0) {
         await ctx.prisma.savedShow.delete({
           where: {
             tmdbId: input.tmdbId,
@@ -140,6 +168,6 @@ export const showsRouter = createTRPCRouter({
         });
       }
 
-      return show;
+      return savedShow;
     }),
 });
