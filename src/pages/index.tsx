@@ -110,7 +110,7 @@ const Home: NextPageWithLayout = () => {
         <title>WatchCopilot</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-28 mb-14 flex w-full flex-col items-center gap-12 px-4"
+        className="container mx-auto mt-28 mb-14 flex w-full max-w-5xl flex-col items-center gap-8 px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"
@@ -121,15 +121,15 @@ const Home: NextPageWithLayout = () => {
           className="flex flex-col items-center gap-5"
           variants={itemFadeDown}
         >
-          <h1 className="mx-auto w-full max-w-6xl text-center text-4xl font-bold text-gray-900 sm:text-6xl">
+          <h1 className="mx-auto text-center text-4xl font-bold text-gray-900 sm:text-6xl">
             <Balancer ratio={0.6}>
-              Discover your next binge-worthy shows with AI
+              Discover your next binge-worthy show with AI
             </Balancer>
           </h1>
-          <p className="w-full max-w-3xl text-center text-base text-gray-700">
-            Let the cutting-edge AI recommendation system effortlessly suggest
-            your next favorite show based on your viewing preferences. Simply
-            tell us your favorite show, and {`we'll`} take care of the rest.
+          <p className="w-full max-w-3xl text-center text-base text-gray-700 sm:text-lg">
+            Endless scrolling for something to watch? Get AI-generated
+            recommendations. Input your favorite show for personalized
+            suggestions that match your interests.
           </p>
         </motion.div>
         <motion.form

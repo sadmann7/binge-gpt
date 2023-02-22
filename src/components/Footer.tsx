@@ -5,11 +5,11 @@ const Footer = () => {
         <h1 className="text-base text-black">
           Powered by{" "}
           <a
-            aria-label="navigate to github repo"
-            href="https://github.com/sadmann7"
+            aria-label="navigate to openai"
+            href="https://openai.com/"
             target="_blank"
             rel="noreferrer"
-            className="font-medium text-gray-700 transition-colors hover:text-black active:text-gray-700"
+            className="font-semibold text-gray-700 transition-colors hover:text-black active:text-gray-700"
           >
             OpenAI
           </a>
@@ -19,7 +19,7 @@ const Footer = () => {
             href="https://www.themoviedb.org/"
             target="_blank"
             rel="noreferrer"
-            className="font-medium text-gray-700 transition-colors hover:text-black active:text-gray-700"
+            className="font-semibold text-gray-700 transition-colors hover:text-black active:text-gray-700"
           >
             TMDB
           </a>
@@ -29,7 +29,7 @@ const Footer = () => {
             href="https://vercel.com"
             target="_blank"
             rel="noreferrer"
-            className="font-medium text-gray-700 transition-colors hover:text-black active:text-gray-700"
+            className="font-semibold text-gray-700 transition-colors hover:text-black active:text-gray-700"
           >
             Vercel
           </a>

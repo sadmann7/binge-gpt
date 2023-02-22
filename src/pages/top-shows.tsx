@@ -59,7 +59,7 @@ const TopShows: NextPageWithLayout = () => {
           Top Shows
         </h1>
         <motion.div
-          className="grid w-full grid-cols-1 gap-5 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+          className="grid w-full grid-cols-1 gap-5 xxs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
           initial="hidden"
           animate="visible"
           variants={containerReveal}
@@ -162,14 +162,14 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
           className="h-60 w-full object-cover"
           priority
         />
-        <div className="mx-4 mb-5 flex flex-col gap-1">
-          <h3 className="flex-1 text-sm font-medium text-gray-900 line-clamp-1 sm:text-base">
+        <div className="mx-4 mt-1 mb-5">
+          <h3 className="flex-1 text-sm font-semibold text-gray-900 line-clamp-1 sm:text-base">
             {show.name}
           </h3>
-          <p className="text-xs font-medium text-gray-600 sm:text-sm">
+          <p className="text-xs text-gray-600 sm:text-sm">
             {show.mediaType === "tv" ? "TV Show" : "Movie"}
           </p>
-          <p className="text-xs font-medium text-gray-600 sm:text-sm">
+          <p className="text-xs text-gray-600 sm:text-sm">
             {extractYear(show.releaseDate ?? "")}
           </p>
         </div>
