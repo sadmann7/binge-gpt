@@ -215,7 +215,7 @@ Home.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
 const ShowCard = ({ show }: { show: GeneratedShow }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   // find show mutation
   const findShowMutation = api.shows.findOne.useMutation({
@@ -240,8 +240,8 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
           setIsOpen={setIsOpen}
           mediaType={show.mediaType as MEDIA_TYPE}
           show={findShowMutation.data}
-          isAdded={isAdded}
-          setIsAdded={setIsAdded}
+          isLiked={isLiked}
+          setIsLiked={setIsLiked}
         />
       ) : null}
       <div
@@ -259,7 +259,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
           <h3 className="flex-1 text-base font-medium text-gray-900 sm:text-lg">
             {show.name}
           </h3>
-          <span className="text-sm text-gray-700">
+          <span className="text-xs text-gray-700 sm:text-sm">
             {show.mediaType === "tv" ? "TV Show" : "Movie"}
           </span>
         </div>

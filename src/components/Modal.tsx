@@ -7,8 +7,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import ReactPlayer from "react-player/lazy";
 import { toast } from "react-hot-toast";
+import ReactPlayer from "react-player/lazy";
 // import { toast } from "react-toastify";
 
 // external imports
@@ -23,17 +23,16 @@ import {
   Volume2,
   VolumeX,
   X,
-  XCircle,
 } from "lucide-react";
-import AddButton from "./AddButton";
+import LikeButton from "./LikeButton";
 
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   mediaType: MEDIA_TYPE;
   show: Show;
-  isAdded: boolean;
-  setIsAdded: Dispatch<SetStateAction<boolean>>;
+  isLiked: boolean;
+  setIsLiked: Dispatch<SetStateAction<boolean>>;
 };
 
 const Modal = ({
@@ -41,8 +40,8 @@ const Modal = ({
   setIsOpen,
   mediaType,
   show,
-  isAdded,
-  setIsAdded,
+  isLiked,
+  setIsLiked,
 }: ModalProps) => {
   const [trailerId, setTrailerId] = useState<string>("");
   const [isMuted, setIsMuted] = useState(false);
@@ -62,7 +61,7 @@ const Modal = ({
   // update show mutation
   const updateShowMutation = api.shows.update.useMutation({
     onSuccess: () => {
-      if (isAdded) {
+      if (isLiked) {
         toast.error("Removed from favorites");
       } else {
         toast.success("Added to favorites");
@@ -191,17 +190,19 @@ const Modal = ({
                     >
                       {show.title ?? show.original_title ?? show.name}
                     </Dialog.Title>
-                    <AddButton
-                      aria-label="add to favourites"
-                      isAdded={isAdded}
+                    <LikeButton
+                      aria-label={
+                        isLiked ? "add to favorites" : "remove from favorites"
+                      }
+                      isLiked={isLiked}
                       onClick={() => {
-                        setIsAdded(!isAdded);
+                        setIsLiked(!isLiked);
                         updateShowMutation.mutate({
                           tmdbId: show.id,
                           name: show.title ?? show.original_title ?? show.name,
                           description: show.overview ?? "",
                           mediaType: mediaType,
-                          favoriteCount: isAdded ? -1 : 1,
+                          favoriteCount: isLiked ? -1 : 1,
                           trailerId: trailerId,
                           genres: show.genres.map((genre) => genre.name ?? ""),
                           releaseDate:
