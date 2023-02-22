@@ -245,6 +245,8 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
         />
       ) : null}
       <div
+        role="button"
+        aria-label={`view ${show.name ?? ""} details`}
         className="flex cursor-pointer flex-col gap-2 rounded-md bg-white p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
@@ -255,7 +257,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
           setIsOpen(true);
         }}
       >
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex justify-between gap-2">
           <h3 className="flex-1 text-base font-medium text-gray-900 sm:text-lg">
             {show.name}
           </h3>

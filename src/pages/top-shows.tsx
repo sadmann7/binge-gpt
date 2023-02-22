@@ -12,6 +12,8 @@ import LoadingScreen from "@/screens/LoadingScreen";
 import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import type { SavedShow } from "@prisma/client";
+import Image from "next/image";
+import { extractYear } from "@/utils/format";
 
 const TopShows: NextPageWithLayout = () => {
   // shows query
@@ -44,12 +46,12 @@ const TopShows: NextPageWithLayout = () => {
       <Head>
         <title>Top Shows | WatchCopilot</title>
       </Head>
-      <main className="container mx-auto mt-24 mb-14 grid w-full max-w-5xl place-items-center gap-5 px-4">
-        <h1 className="text-center text-2xl font-semibold tracking-tight text-black sm:text-4xl">
+      <main className="container mx-auto mt-20 mb-14 grid w-full max-w-5xl gap-8 px-4">
+        <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl">
           Top Shows
         </h1>
         <motion.div
-          className="grid max-w-3xl gap-2"
+          className="grid w-full grid-cols-1 gap-4 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
           initial="hidden"
           animate="visible"
           variants={containerReveal}
@@ -89,7 +91,11 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
   }
 
   return (
-    <motion.div variants={itemFadeDown}>
+    <motion.div
+      variants={itemFadeDown}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
       {findShowMutation.isSuccess ? (
         <Modal
           isOpen={isOpen}
@@ -102,7 +108,9 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
         />
       ) : null}
       <div
-        className="flex cursor-pointer flex-col gap-2 rounded-md bg-white p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
+        role="button"
+        aria-label={`view ${show.name} details`}
+        className="grid cursor-pointer gap-2 overflow-hidden rounded-md bg-white shadow-md"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
@@ -112,30 +120,28 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
           setIsOpen(true);
         }}
       >
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="flex-1 text-base font-medium text-gray-900 sm:text-lg">
+        <Image
+          src={
+            show.image
+              ? `https://image.tmdb.org/t/p/w500/${show.image as string}`
+              : "https://via.placeholder.com/500x500"
+          }
+          alt={show.name}
+          width={500}
+          height={500}
+          className="h-60 w-full object-cover"
+          priority
+        />
+        <div className="mx-4 mb-5 flex flex-col gap-1">
+          <h3 className="flex-1 text-sm font-medium text-gray-900 line-clamp-1 sm:text-base">
             {show.name}
           </h3>
-          <span className="text-xs text-gray-700 sm:text-sm">
+          <p className="text-xs font-medium text-gray-600 sm:text-sm">
             {show.mediaType === "tv" ? "TV Show" : "Movie"}
-          </span>
-        </div>
-        <p className="text-xs text-gray-700 line-clamp-2 sm:text-sm">
-          {show.description}
-        </p>
-        <div className="mt-4 flex items-center">
-          <span className="text-sm font-medium text-yellow-500">
-            {show.favoriteCount}
-          </span>
-          <svg
-            className="ml-2 h-4 w-4 fill-current text-yellow-500"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 0a10 10 0 1 0 10 10A10 10 0 0 0 10 0zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-.81-11.72a1 1 0 0 0 1.62 1.16l2.93-2.36a1 1 0 0 0-1.23-1.58l-2.12 1.71-1.04-.87z"
-            />
-          </svg>
+          </p>
+          <p className="text-xs font-medium text-gray-600 sm:text-sm">
+            {extractYear(show.releaseDate ?? "")}
+          </p>
         </div>
       </div>
     </motion.div>
