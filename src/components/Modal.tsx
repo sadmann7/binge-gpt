@@ -15,15 +15,7 @@ import ReactPlayer from "react-player/lazy";
 import type { Show } from "@/types/globals";
 import { api } from "@/utils/api";
 import { extractYear } from "@/utils/format";
-import {
-  CheckCircle,
-  Pause,
-  Play,
-  Plus,
-  Volume2,
-  VolumeX,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import LikeButton from "./LikeButton";
 
 type ModalProps = {
@@ -47,7 +39,6 @@ const Modal = ({
 }: ModalProps) => {
   const apiUtils = api.useContext();
   const [trailerId, setTrailerId] = useState<string>("");
-  const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
   // set trailerId
@@ -138,71 +129,11 @@ const Modal = ({
                     width="100%"
                     height="100%"
                     controls={true}
-                    muted={isMuted}
+                    muted={false}
                     playing={isPlaying}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
                   />
-                  <div className="absolute bottom-6 hidden w-full items-center justify-between gap-2 px-6">
-                    <div className="flex items-center gap-2.5">
-                      <button
-                        aria-label="control video playback"
-                        className="flex items-center gap-1 rounded-sm bg-gray-200 px-2.5 py-1 text-sm text-black transition-colors hover:bg-white active:bg-gray-200 sm:text-base"
-                        onClick={() => setIsPlaying(!isPlaying)}
-                      >
-                        {isPlaying ? (
-                          <Fragment>
-                            <Pause
-                              aria-hidden="true"
-                              className="aspect-square w-5"
-                            />
-                            <p>Pause</p>
-                          </Fragment>
-                        ) : (
-                          <Fragment>
-                            <Play
-                              aria-hidden="true"
-                              className="aspect-square w-5"
-                            />
-                            <p>Play</p>
-                          </Fragment>
-                        )}
-                      </button>
-                      <button
-                        aria-label="remove from my list"
-                        className="transition- group grid aspect-square w-7 place-items-center rounded-full bg-gray-900/80 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
-                        onClick={() => {
-                          toast.success("Added to favorites", {
-                            icon: (
-                              <CheckCircle className="aspect-square w-5 text-green-600" />
-                            ),
-                          });
-                        }}
-                      >
-                        <Plus
-                          aria-hidden="true"
-                          className="aspect-square w-5 text-white transition-transform group-hover:scale-105 group-active:scale-95"
-                        />
-                      </button>
-                      <button
-                        aria-label="toggle audio"
-                        className="group grid aspect-square w-7 place-items-center rounded-full bg-gray-900/80 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
-                        onClick={() => setIsMuted(!isMuted)}
-                      >
-                        {isMuted ? (
-                          <VolumeX
-                            aria-hidden="true"
-                            className="aspect-square w-4 text-white transition-transform group-hover:scale-105 group-active:scale-95"
-                          />
-                        ) : (
-                          <Volume2
-                            aria-hidden="true"
-                            className="aspect-square w-4 text-white transition-transform group-hover:scale-105 group-active:scale-95"
-                          />
-                        )}
-                      </button>
-                    </div>
-                  </div>
                 </div>
                 <div className="mx-6 mt-4 mb-6 grid gap-2">
                   {isLikeButtonVisible ? (

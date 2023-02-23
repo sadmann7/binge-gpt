@@ -131,7 +131,7 @@ export const showsRouter = createTRPCRouter({
         name: z.string(),
         description: z.string(),
         image: z.string(),
-        favoriteCount: z.number(),
+        favoriteCount: z.number().min(0),
         mediaType: z.nativeEnum(MEDIA_TYPE),
         trailerId: z.string(),
         genres: z.array(z.string()),

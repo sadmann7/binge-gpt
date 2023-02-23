@@ -9,7 +9,7 @@ import { twMerge } from "tailwind-merge";
 // external imports
 import type { RouterOutputs } from "@/utils/api";
 import { api } from "@/utils/api";
-import { containerReveal, itemFadeDown } from "@/utils/constants";
+import { containerReveal, itemReveal } from "@/utils/constants";
 import { extractYear } from "@/utils/format";
 import Modal from "./Modal";
 
@@ -126,7 +126,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      variants={itemFadeDown}
+      variants={itemReveal}
     >
       {findShowMutation.isSuccess ? (
         <Modal

@@ -12,7 +12,7 @@ export const containerReveal: Variants = {
 };
 
 export const itemReveal: Variants = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
