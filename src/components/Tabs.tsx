@@ -15,8 +15,8 @@ import Modal from "./Modal";
 
 type TabsProps = {
   data: RouterOutputs["shows"]["getPaginated"][];
-  mediaType: MEDIA_TYPE | undefined;
-  setMediaType: Dispatch<SetStateAction<MEDIA_TYPE | undefined>>;
+  mediaType: MEDIA_TYPE | null;
+  setMediaType: Dispatch<SetStateAction<MEDIA_TYPE | null>>;
 };
 
 const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
@@ -36,7 +36,7 @@ const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
   const tabs = [
     {
       name: "All",
-      onClick: () => setMediaType(undefined),
+      onClick: () => setMediaType(null),
       content: <Shows data={data} />,
     },
     {

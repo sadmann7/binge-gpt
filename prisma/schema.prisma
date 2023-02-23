@@ -25,6 +25,6 @@ model SavedShow {
 }
 
 enum MEDIA_TYPE {
-    movie
     tv
+    movie
 }

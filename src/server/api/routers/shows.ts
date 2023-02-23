@@ -75,9 +75,12 @@ export const showsRouter = createTRPCRouter({
         });
       }
       const shows = (await response.json()) as Shows;
+      const mostPopularShow = shows.results.sort(
+        (a, b) => b.popularity - a.popularity
+      )[0];
       const anotherResponse = await fetch(
         `https://api.themoviedb.org/3/${input.mediaType}/${
-          shows.results[0]?.id ?? 66732
+          mostPopularShow?.id ?? 66732
         }?api_key=${env.TMDB_API_KEY}&append_to_response=videos`
       );
       if (!anotherResponse.ok) {
@@ -95,14 +98,14 @@ export const showsRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100),
         cursor: z.string().nullish(),
-        mediaType: z.nativeEnum(MEDIA_TYPE).optional(),
+        mediaType: z.nativeEnum(MEDIA_TYPE).optional().nullable(),
       })
     )
     .query(async ({ ctx, input }) => {
       const savedShows = await ctx.prisma.savedShow.findMany({
         take: input.limit + 1,
         where: {
-          mediaType: input.mediaType,
+          mediaType: input.mediaType ? { equals: input.mediaType } : undefined,
         },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         orderBy: {
