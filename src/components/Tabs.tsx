@@ -171,10 +171,8 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
           <Image
             src={
               show.image
-                ? `https://image.tmdb.org/t/p/w220_and_h330_face/${String(
-                    show.image
-                  )}`
-                : "https://via.placeholder.com/220x330"
+                ? `https://image.tmdb.org/t/p/w220_and_h330_face/${show.image}`
+                : "/images/placeholder.webp"
             }
             alt={show.name}
             width={220}
@@ -194,7 +192,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
             {show.mediaType === "tv" ? "TV show" : "Movie"}
           </p>
           <p className="text-xs text-gray-600 sm:text-sm">
-            {extractYear(show.releaseDate ?? "")}
+            {extractYear(show.releaseDate ?? "") || "-"}
           </p>
         </div>
       </div>

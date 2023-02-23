@@ -166,6 +166,7 @@ const Modal = ({
                             releaseDate:
                               show.release_date ?? show.first_air_date ?? "",
                             voteAverage: show.vote_average ?? 0,
+                            voteCount: show.vote_count ?? 0,
                           });
                         }}
                       />

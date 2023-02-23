@@ -75,12 +75,12 @@ export const showsRouter = createTRPCRouter({
         });
       }
       const shows = (await response.json()) as Shows;
-      const mostPopularShow = shows.results.sort(
-        (a, b) => b.popularity - a.popularity
+      const mostVotedShow = shows.results.sort(
+        (a, b) => b.vote_count - a.vote_count
       )[0];
       const anotherResponse = await fetch(
         `https://api.themoviedb.org/3/${input.mediaType}/${
-          mostPopularShow?.id ?? 66732
+          mostVotedShow?.id ?? 66732
         }?api_key=${env.TMDB_API_KEY}&append_to_response=videos`
       );
       if (!anotherResponse.ok) {
@@ -131,12 +131,13 @@ export const showsRouter = createTRPCRouter({
         name: z.string(),
         description: z.string(),
         image: z.string(),
-        favoriteCount: z.number().min(0),
+        favoriteCount: z.number(),
         mediaType: z.nativeEnum(MEDIA_TYPE),
         trailerId: z.string(),
         genres: z.array(z.string()),
         releaseDate: z.string(),
         voteAverage: z.number().min(0),
+        voteCount: z.number().min(0),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -160,6 +161,7 @@ export const showsRouter = createTRPCRouter({
           genres: input.genres,
           releaseDate: input.releaseDate,
           voteAverage: input.voteAverage,
+          voteCount: input.voteCount,
         },
       });
       if (!savedShow) {
