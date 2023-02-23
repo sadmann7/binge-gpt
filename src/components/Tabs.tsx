@@ -2,14 +2,14 @@ import { Tab } from "@headlessui/react";
 import { MEDIA_TYPE, type SavedShow } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { toast } from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
 // external imports
 import type { RouterOutputs } from "@/utils/api";
 import { api } from "@/utils/api";
-import { containerReveal, itemReveal } from "@/utils/constants";
+import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { extractYear } from "@/utils/format";
 import Modal from "./Modal";
 
@@ -23,7 +23,7 @@ const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
   // configure tabs
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  useEffect(() => {
+  useMemo(() => {
     if (mediaType === MEDIA_TYPE.tv) {
       setSelectedIndex(1);
     } else if (mediaType === MEDIA_TYPE.movie) {
@@ -36,17 +36,26 @@ const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
   const tabs = [
     {
       name: "All",
-      onClick: () => setMediaType(null),
+      onClick: () => {
+        setMediaType(null);
+        setSelectedIndex(0);
+      },
       content: <Shows data={data} />,
     },
     {
       name: "TV shows",
-      onClick: () => setMediaType("tv"),
+      onClick: () => {
+        setMediaType("tv");
+        setSelectedIndex(1);
+      },
       content: <Shows data={data} />,
     },
     {
       name: "Movies",
-      onClick: () => setMediaType("movie"),
+      onClick: () => {
+        setMediaType("movie");
+        setSelectedIndex(2);
+      },
       content: <Shows data={data} />,
     },
   ];
@@ -93,10 +102,16 @@ const Shows = ({
       animate="visible"
       variants={containerReveal}
     >
-      {data.map((page) =>
-        page.savedShows.map((show) => (
-          <SavedShowCard key={show.id} show={show} />
-        ))
+      {data[0]?.savedShows.length ? (
+        data.map((page) =>
+          page.savedShows.map((show) => (
+            <SavedShowCard key={show.id} show={show} />
+          ))
+        )
+      ) : (
+        <div className="col-span-full mx-auto text-base text-gray-900 sm:text-lg">
+          No shows saved yet
+        </div>
       )}
     </motion.div>
   );
@@ -126,7 +141,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      variants={itemReveal}
+      variants={itemFadeDown}
     >
       {findShowMutation.isSuccess ? (
         <Modal
@@ -167,7 +182,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
             className="h-60 w-full object-cover"
             priority
           />
-          <div className="absolute -bottom-4 right-3 grid h-7 w-7 place-items-center rounded-full bg-black/80 text-xs font-medium text-white ring-2 ring-gray-200 sm:text-sm">
+          <div className="absolute -bottom-3 right-3 grid h-7 w-7 place-items-center rounded-full bg-black/80 text-xs font-medium text-white ring-2 ring-gray-200 sm:text-sm">
             {show.favoriteCount}
           </div>
         </div>
