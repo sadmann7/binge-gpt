@@ -152,20 +152,25 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
           setIsOpen(true);
         }}
       >
-        <Image
-          src={
-            show.image
-              ? `https://image.tmdb.org/t/p/w220_and_h330_face/${String(
-                  show.image
-                )}`
-              : "https://via.placeholder.com/500x500"
-          }
-          alt={show.name}
-          width={500}
-          height={500}
-          className="h-60 w-full object-cover"
-          priority
-        />
+        <div className="relative">
+          <Image
+            src={
+              show.image
+                ? `https://image.tmdb.org/t/p/w220_and_h330_face/${String(
+                    show.image
+                  )}`
+                : "https://via.placeholder.com/220x330"
+            }
+            alt={show.name}
+            width={220}
+            height={330}
+            className="h-60 w-full object-cover"
+            priority
+          />
+          <div className="absolute -bottom-4 right-3 grid h-7 w-7 place-items-center rounded-full bg-black/80 text-xs font-medium text-white ring-2 ring-gray-200 sm:text-sm">
+            {show.favoriteCount}
+          </div>
+        </div>
         <div className="mx-4 mt-1 mb-5">
           <h3 className="flex-1 text-sm font-semibold text-gray-900 line-clamp-1 sm:text-base">
             {show.name}
