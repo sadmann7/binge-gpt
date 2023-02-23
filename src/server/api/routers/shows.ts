@@ -95,12 +95,15 @@ export const showsRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100),
         cursor: z.string().nullish(),
+        mediaType: z.nativeEnum(MEDIA_TYPE).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const savedShows = await ctx.prisma.savedShow.findMany({
         take: input.limit + 1,
-        where: {},
+        where: {
+          mediaType: input.mediaType,
+        },
         cursor: input.cursor ? { id: input.cursor } : undefined,
         orderBy: {
           favoriteCount: "desc",

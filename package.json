@@ -33,6 +33,7 @@
     "react-player": "^2.11.2",
     "react-wrap-balancer": "^0.4.0",
     "superjson": "1.9.1",
+    "tailwind-merge": "^1.10.0",
     "zod": "^3.20.2"
   },
   "devDependencies": {

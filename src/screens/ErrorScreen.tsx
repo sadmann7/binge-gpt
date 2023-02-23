@@ -6,14 +6,14 @@ import { AlertTriangle } from "lucide-react";
 
 const ErrorScreen = ({ error }: { error?: TRPCClientErrorLike<AppRouter> }) => {
   return (
-    <div className="flex h-full min-h-screen w-full flex-col items-center justify-center">
+    <div className="flex min-h-screen w-full max-w-5xl flex-col items-center justify-center px-4">
       <AlertTriangle className="h-16 w-16 text-red-400" />
       <h1 className="mt-4 text-2xl font-semibold text-red-400 line-clamp-1">
         {error?.message ?? "Something went wrong"}
       </h1>
       <table className="mt-2.5">
-        <thead className="text-text text-base font-medium md:text-lg">
-          <tr className="text-gray-900">
+        <thead className="text-base font-medium text-gray-900 md:text-lg">
+          <tr>
             <th>Try doing these:</th>
           </tr>
         </thead>

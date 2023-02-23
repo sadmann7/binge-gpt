@@ -29,7 +29,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         className={`${
           variant === "primary"
-            ? "bg-violet-500 text-white enabled:hover:bg-violet-600 enabled:active:bg-violet-500"
+            ? "bg-indigo-500 text-white enabled:hover:bg-indigo-600 enabled:active:bg-indigo-500"
             : variant === "secondary"
             ? "bg-gray-500 text-white enabled:hover:bg-gray-600 enabled:active:bg-gray-500"
             : "bg-gray-200 text-gray-900 enabled:hover:bg-gray-300 enabled:active:bg-gray-200"
