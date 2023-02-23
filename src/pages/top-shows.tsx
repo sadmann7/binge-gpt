@@ -7,6 +7,7 @@ import { useInView } from "react-intersection-observer";
 import type { NextPageWithLayout } from "./_app";
 
 // external imports
+import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import ErrorScreen from "@/screens/ErrorScreen";
@@ -15,16 +16,16 @@ import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { extractYear } from "@/utils/format";
 import type { SavedShow } from "@prisma/client";
-import Button from "@/components/Button";
 
 const TopShows: NextPageWithLayout = () => {
   // shows query
   const showsQuery = api.shows.getPaginated.useInfiniteQuery(
     {
-      limit: 4,
+      limit: 10,
     },
     {
       getNextPageParam: (lastPage) => {
+        if (!lastPage) return undefined;
         if (lastPage.nextCursor) {
           return lastPage.nextCursor;
         }
@@ -55,7 +56,7 @@ const TopShows: NextPageWithLayout = () => {
       <Head>
         <title>Top Shows | WatchCopilot</title>
       </Head>
-      <main className="container mx-auto mt-20 mb-14 grid w-full max-w-5xl gap-8 px-4">
+      <main className="container mx-auto mt-20 mb-10 grid w-full max-w-5xl gap-8 px-4">
         <h1 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
           Top Shows
         </h1>
@@ -117,9 +118,9 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
 
   return (
     <motion.div
-      variants={itemFadeDown}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
+      variants={itemFadeDown}
     >
       {findShowMutation.isSuccess ? (
         <Modal

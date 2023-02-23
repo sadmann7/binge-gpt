@@ -110,7 +110,7 @@ const Home: NextPageWithLayout = () => {
         <title>WatchCopilot</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-28 mb-14 grid w-full max-w-5xl justify-items-center px-4"
+        className="container mx-auto mt-28 mb-10 grid w-full max-w-5xl justify-items-center px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"

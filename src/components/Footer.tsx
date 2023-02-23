@@ -1,8 +1,8 @@
 const Footer = () => {
   return (
     <footer aria-label="footer">
-      <div className="grid place-items-center py-4">
-        <h1 className="text-base text-black">
+      <div className="grid place-items-center py-5">
+        <h1 className="text-sm text-gray-600 sm:text-base">
           Powered by{" "}
           <a
             aria-label="navigate to openai"

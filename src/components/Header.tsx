@@ -8,13 +8,13 @@ import { CheckCircle, Github, Tv2 } from "lucide-react";
 const navLinks = [
   {
     name: "Github",
-    icon: <Github className="aspect-square w-6" aria-hidden="true" />,
+    icon: <Github aria-hidden="true" className="h-6 w-6" />,
     href: "https://github.com/sadmann7/watchcopilot.git",
     isExternal: true,
   },
   {
     name: "Top ",
-    icon: <CheckCircle className="aspect-square w-6" aria-hidden="true" />,
+    icon: <CheckCircle aria-hidden="true" className="h-6 w-6" />,
     href: "/top-shows",
     isExternal: false,
   },
@@ -54,7 +54,7 @@ const Header = () => {
           href="/"
           className="flex items-center gap-2 text-gray-900 transition-colors hover:text-black active:text-gray-900"
         >
-          <Tv2 className="aspect-square w-5" aria-hidden="true" />
+          <Tv2 aria-hidden="true" className="h-5 w-5" />
           <span className="text-xl font-medium">WatchCopilot</span>
         </Link>
         <div className="flex items-center gap-2">
@@ -66,7 +66,7 @@ const Header = () => {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-md bg-transparent p-1.5 font-mono text-base text-gray-900 transition-colors hover:bg-indigo-300 active:bg-indigo-100"
+                className="rounded-md bg-transparent p-1.5 font-mono text-base text-gray-900 transition-colors hover:bg-violet-300 active:bg-violet-100"
               >
                 {link.icon}
               </a>
@@ -75,9 +75,9 @@ const Header = () => {
                 aria-label={`navigate to ${link.name} page`}
                 key={index}
                 href={link.href}
-                className={`rounded-md p-1.5 font-mono text-base text-gray-900 transition-colors hover:bg-indigo-300 active:bg-indigo-100 ${
+                className={`rounded-md p-1.5 font-mono text-base text-gray-900 transition-colors hover:bg-violet-300 active:bg-violet-100 ${
                   router.pathname === link.href
-                    ? "bg-indigo-300"
+                    ? "bg-violet-300"
                     : "bg-transparent"
                 }`}
               >
