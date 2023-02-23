@@ -78,9 +78,14 @@ const TopShows: NextPageWithLayout = () => {
           ref={ref}
           onClick={() => void showsQuery.fetchNextPage()}
           isLoading={showsQuery.isFetchingNextPage}
+          loadingVariant="dots"
           disabled={!showsQuery.hasNextPage || showsQuery.isFetchingNextPage}
         >
-          {showsQuery.hasNextPage ? "Load more shows" : `That's all folks!`}
+          {!showsQuery.isFetchingNextPage && showsQuery.hasNextPage
+            ? null
+            : showsQuery.hasNextPage
+            ? "Load more shows"
+            : `That's all folks!`}
         </Button>
       </main>
     </>

@@ -110,7 +110,7 @@ const Home: NextPageWithLayout = () => {
         <title>WatchCopilot</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-28 mb-14 flex w-full max-w-5xl flex-col items-center px-4"
+        className="container mx-auto mt-28 mb-14 grid w-full max-w-5xl justify-items-center px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"
@@ -160,6 +160,7 @@ const Home: NextPageWithLayout = () => {
             variant="primary"
             className="w-full"
             isLoading={generateAIShowMutation.isLoading}
+            loadingVariant="dots"
             disabled={generateAIShowMutation.isLoading}
           >
             Discover your shows
