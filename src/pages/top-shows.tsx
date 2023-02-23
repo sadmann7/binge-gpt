@@ -54,11 +54,15 @@ const TopShows: NextPageWithLayout = () => {
       <Head>
         <title>Top Shows | WatchCopilot</title>
       </Head>
-      <main className="container mx-auto mt-20 mb-10 grid w-full max-w-5xl gap-8 px-4">
+      <main className="container mx-auto mt-20 mb-10 grid w-full max-w-5xl gap-5 px-4">
         <h1 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
           Top shows
         </h1>
-        <Tabs data={showsQuery.data?.pages} setMediaType={setMediaType} />
+        <Tabs
+          data={showsQuery.data?.pages}
+          mediaType={mediaType}
+          setMediaType={setMediaType}
+        />
         <Button
           aria-label="load more shows"
           variant="tertiary"

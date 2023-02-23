@@ -264,7 +264,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
             {show.name}
           </h3>
           <span className="text-xs text-gray-700 sm:text-sm">
-            {show.mediaType === "tv" ? "TV Show" : "Movie"}
+            {show.mediaType === "tv" ? "TV show" : "Movie"}
           </span>
         </div>
         <p className="text-xs text-gray-700 line-clamp-2 sm:text-sm">
