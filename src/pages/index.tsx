@@ -150,7 +150,7 @@ const Home: NextPageWithLayout = () => {
                 ref={ref}
                 variants={containerReveal}
               >
-                {generateAIShowMutation.data.map((show) => (
+                {generateAIShowMutation.data.formattedData.map((show) => (
                   <ShowCard key={show.name} show={show} />
                 ))}
               </motion.div>
@@ -171,7 +171,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   // find show mutation
-  const findShowMutation = api.shows.findOne.useMutation({
+  const findShowMutation = api.shows.getOne.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },

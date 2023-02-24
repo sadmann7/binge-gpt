@@ -153,6 +153,26 @@ export const openaiRouter = createTRPCRouter({
             mediaType: mediaType?.toLowerCase().trim() as MEDIA_TYPE,
           };
         });
-      return formattedData;
+
+      const genCount = await ctx.prisma.genCount.findFirst();
+      if (!genCount) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Generation count not found.",
+        });
+      }
+      await ctx.prisma.genCount.update({
+        where: {
+          id: genCount.id,
+        },
+        data: {
+          count: genCount.count + formattedData.length,
+        },
+      });
+
+      return {
+        formattedData,
+        generations: genCount.count + formattedData.length,
+      };
     }),
 });
