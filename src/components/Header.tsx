@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 // external imports
-import { CheckCircle, Github, Tv2 } from "lucide-react";
+import { Github, Heart, Tv2 } from "lucide-react";
 
 const navLinks = [
   {
@@ -14,7 +14,7 @@ const navLinks = [
   },
   {
     name: "Top ",
-    icon: <CheckCircle aria-hidden="true" className="h-6 w-6" />,
+    icon: <Heart aria-hidden="true" className="h-6 w-6" />,
     href: "/top-shows",
     isExternal: false,
   },

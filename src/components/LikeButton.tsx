@@ -6,7 +6,7 @@ import type {
 } from "react";
 
 // external imports
-import { CheckCircle, PlusCircle } from "lucide-react";
+import { Heart } from "lucide-react";
 
 type LikeButtonProps = {
   isLiked: boolean;
@@ -22,13 +22,12 @@ const LikeButton = ({ isLiked, className, ...props }: LikeButtonProps) => {
       className={`aspect-square w-5 ${className ?? ""}`}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      animate={{ scale: isLiked ? 1.1 : 1 }}
       {...props}
     >
       {isLiked ? (
-        <CheckCircle aria-hidden="true" className="text-green-600" />
+        <Heart aria-hidden="true" className="fill-current text-red-600" />
       ) : (
-        <PlusCircle aria-hidden="true" className="text-red-600" />
+        <Heart aria-hidden="true" className="text-red-600" />
       )}
     </motion.button>
   );
