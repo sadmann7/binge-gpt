@@ -6,7 +6,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const showsRouter = createTRPCRouter({
-  getOne: publicProcedure
+  findOne: publicProcedure
     .input(
       z.object({
         query: z.string().min(1),

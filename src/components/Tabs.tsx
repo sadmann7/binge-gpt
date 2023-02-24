@@ -123,7 +123,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   // find show mutation
-  const findShowMutation = api.shows.getOne.useMutation({
+  const findShowMutation = api.shows.findOne.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },
