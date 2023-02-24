@@ -105,8 +105,9 @@ export const showsRouter = createTRPCRouter({
       const savedShows = await ctx.prisma.savedShow.findMany({
         take: input.limit + 1,
         where: {
-          mediaType: input.mediaType ? { equals: input.mediaType } : undefined,
+          mediaType: input.mediaType ?? undefined,
         },
+        distinct: ["id", "tmdbId"],
         cursor: input.cursor ? { id: input.cursor } : undefined,
         orderBy: {
           favoriteCount: "desc",
