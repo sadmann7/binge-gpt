@@ -9,7 +9,7 @@ type MetaProps = {
 const Meta = ({
   title = "WatchCopilot",
   description = "Discover Your Next Binge-Worthy Show",
-  image,
+  image = "https://watchcopilot.vercel.app/api/og?title=WatchCopilot&description=Discover%20Your%20Next%20Binge-Worthy%20Show",
 }: MetaProps) => {
   return (
     <Head>

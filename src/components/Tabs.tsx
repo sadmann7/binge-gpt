@@ -185,7 +185,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
             {show.favoriteCount}
           </div>
         </div>
-        <div className="mx-4 mt-1 mb-5">
+        <div className="mx-4 mb-3">
           <h3 className="flex-1 text-sm font-semibold text-gray-900 line-clamp-1 sm:text-base">
             {show.name}
           </h3>
