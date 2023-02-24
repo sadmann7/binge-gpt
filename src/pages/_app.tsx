@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { type AppType } from "next/app";
@@ -32,6 +33,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
         <title>WatchCopilot</title>
       </Head>
       {getLayout(<Component {...pageProps} />)}
+      <Analytics />
       <ToasterWrapper />
     </RWBProvider>
   );

@@ -19,6 +19,7 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "@vercel/analytics": "^0.1.10",
     "@vercel/og": "^0.1.0",
     "csstype": "^3.1.1",
     "framer-motion": "^9.0.4",
