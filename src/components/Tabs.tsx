@@ -158,7 +158,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name} details`}
-        className="grid cursor-pointer gap-2 overflow-hidden rounded-md bg-white/90 shadow-md"
+        className="grid cursor-pointer gap-2 overflow-hidden rounded-md bg-white/90 shadow-md ring-1 ring-gray-200"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({

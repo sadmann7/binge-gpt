@@ -46,7 +46,7 @@ const Home: NextPageWithLayout = () => {
   const generatedRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!generatedRef.current || !generateAIShowMutation.data) return;
-    const offset = generatedRef.current.offsetTop - 100;
+    const offset = generatedRef.current.offsetTop - 90;
     window.scrollTo({
       top: offset,
       behavior: "smooth",
@@ -84,18 +84,17 @@ const Home: NextPageWithLayout = () => {
         variants={containerReveal}
       >
         <motion.div
-          className="flex flex-col items-center gap-5"
+          className="flex flex-col items-center gap-6"
           variants={itemFadeDown}
         >
           <h1 className="mx-auto text-center text-4xl font-bold text-gray-900 sm:text-6xl">
-            <Balancer ratio={0.6}>
-              Discover your next binge-worthy show with AI
+            <Balancer ratio={0.5}>
+              Discover your next binge-worthy show
             </Balancer>
           </h1>
           <p className="w-full max-w-3xl text-center text-base text-gray-700 sm:text-lg">
-            Endless scrolling for something to watch? Get AI-generated
-            recommendations. Input your favorite show for personalized
-            suggestions that match your interests.
+            Endless scrolling for something to watch? Input your favorite show
+            for AI-generated show recommendations
           </p>
         </motion.div>
         <motion.form
