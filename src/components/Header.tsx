@@ -66,7 +66,7 @@ const Header = () => {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-md bg-transparent p-1.5 font-mono text-base text-gray-900 transition-colors hover:text-indigo-500 active:text-indigo-300"
+                className="rounded-md bg-transparent p-1.5 font-mono text-base text-gray-900 transition-colors hover:text-indigo-600 active:text-indigo-400"
               >
                 {link.icon}
               </a>
@@ -75,9 +75,9 @@ const Header = () => {
                 aria-label={`navigate to ${link.name} page`}
                 key={index}
                 href={link.href}
-                className={`rounded-md p-1.5 font-mono text-base transition-colors hover:text-indigo-500 active:text-indigo-300 ${
+                className={`rounded-md p-1.5 font-mono text-base transition-colors hover:text-indigo-600 active:text-indigo-400 ${
                   router.pathname === link.href
-                    ? "text-indigo-500"
+                    ? "text-indigo-600"
                     : "text-gray-900"
                 }`}
               >

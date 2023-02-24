@@ -187,7 +187,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
   }
 
   return (
-    <motion.div variants={itemFadeDown}>
+    <motion.div className="rounded-md bg-blue-900/20" variants={itemFadeDown}>
       {findShowMutation.isSuccess ? (
         <Modal
           isOpen={isOpen}
@@ -201,7 +201,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name ?? ""} details`}
-        className="flex cursor-pointer flex-col gap-2 rounded-md bg-white p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
+        className="flex cursor-pointer flex-col gap-2 rounded-md bg-white/90 p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({

@@ -139,6 +139,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
 
   return (
     <motion.div
+      className="rounded-md bg-blue-900/20"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       variants={itemFadeDown}
@@ -157,7 +158,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name} details`}
-        className="grid cursor-pointer gap-2 overflow-hidden rounded-md bg-white shadow-md"
+        className="grid cursor-pointer gap-2 overflow-hidden rounded-md bg-white/90 shadow-md"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({

@@ -8,7 +8,7 @@ import type {
 // external imports
 import { CheckCircle, PlusCircle } from "lucide-react";
 
-type AddButtonProps = {
+type LikeButtonProps = {
   isLiked: boolean;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -16,7 +16,7 @@ type AddButtonProps = {
 > &
   ComponentProps<typeof motion.button>;
 
-const AddButton = ({ isLiked, className, ...props }: AddButtonProps) => {
+const LikeButton = ({ isLiked, className, ...props }: LikeButtonProps) => {
   return (
     <motion.button
       className={`aspect-square w-5 ${className ?? ""}`}
@@ -34,4 +34,4 @@ const AddButton = ({ isLiked, className, ...props }: AddButtonProps) => {
   );
 };
 
-export default AddButton;
+export default LikeButton;
