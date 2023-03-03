@@ -7,15 +7,15 @@ type MetaProps = {
 };
 
 const Meta = ({
-  title = "WatchCopilot",
+  title = "BingeGPT",
   description = "Discover Your Next Binge-Worthy Show",
-  image = "https://watchcopilot.vercel.app/api/og?title=WatchCopilot&description=Discover%20Your%20Next%20Binge-Worthy%20Show",
+  image = "https://bingegpt.vercel.app/api/og?title=BingeGPT&description=Discover%20Your%20Next%20Binge-Worthy%20Show",
 }: MetaProps) => {
   return (
     <Head>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta property="og:site_name" content="WatchCopilot" />
+      <meta property="og:site_name" content="BingeGPT" />
       <meta property="og:description" content={description} />
       <meta property="og:title" content={title} />
       <meta property="og:image" content={image} />

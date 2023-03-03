@@ -1,9 +1,7 @@
-import Meta from "@/components/Meta";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import Meta from "@/components/layout/Meta";
 import { type ReactNode } from "react";
-
-// external imports
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {
   return (

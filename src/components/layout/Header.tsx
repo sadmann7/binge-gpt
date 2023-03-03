@@ -41,9 +41,9 @@ const Header = () => {
   return (
     <header
       aria-label="header"
-      className={`fixed top-0 left-0 z-20 flex w-full items-center gap-4 ${
+      className={`fixed top-0 left-0 z-20 flex w-full items-center gap-4 transition ${
         isScrolled
-          ? "bg-gray-200/90 shadow-md backdrop-blur-md backdrop-filter transition-all duration-300 ease-in-out"
+          ? "bg-zinc-700/80 shadow-md backdrop-blur-md backdrop-saturate-150 backdrop-filter duration-300 ease-in-out"
           : "bg-transparent"
       }`}
       onScroll={handleScroll}
@@ -52,10 +52,10 @@ const Header = () => {
         <Link
           aria-label="navigate to home page"
           href="/"
-          className="flex items-center gap-2 text-gray-900 transition-colors hover:text-black active:text-gray-900"
+          className="flex items-center gap-2 text-gray-100 transition-colors hover:text-white active:text-gray-100"
         >
           <Tv2 aria-hidden="true" className="h-5 w-5" />
-          <span className="text-xl font-medium">WatchCopilot</span>
+          <span className="text-xl font-medium">BingeGPT</span>
         </Link>
         <div className="flex items-center gap-2">
           {navLinks.map((link, index) =>
@@ -66,7 +66,7 @@ const Header = () => {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-md bg-transparent p-1.5 font-mono text-base text-gray-900 transition-colors hover:text-indigo-600 active:text-indigo-400"
+                className="rounded-md p-1.5 text-base text-white transition hover:bg-zinc-500 active:scale-95"
               >
                 {link.icon}
               </a>
@@ -75,10 +75,10 @@ const Header = () => {
                 aria-label={`navigate to ${link.name} page`}
                 key={index}
                 href={link.href}
-                className={`rounded-md p-1.5 font-mono text-base transition-colors hover:text-indigo-600 active:text-indigo-400 ${
+                className={`rounded-md p-1.5 text-base text-white transition hover:bg-zinc-500 active:scale-95 ${
                   router.pathname === link.href
-                    ? "text-indigo-600"
-                    : "text-gray-900"
+                    ? "bg-zinc-500"
+                    : "bg-transparent"
                 }`}
               >
                 {link.icon}

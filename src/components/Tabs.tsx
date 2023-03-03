@@ -62,16 +62,16 @@ const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
 
   return (
     <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-      <Tab.List className="mx-auto flex w-full gap-2 overflow-x-auto whitespace-nowrap rounded-xl bg-blue-900/20 p-1 sm:max-w-sm">
+      <Tab.List className="mx-auto flex w-full space-x-1 overflow-x-auto whitespace-nowrap rounded-md bg-zinc-600 p-1 sm:max-w-sm">
         {tabs.map((tab) => (
           <Tab
             key={tab.name}
             onClick={tab.onClick}
             className={twMerge(
-              "w-full rounded-lg py-2.5 px-3.5 text-sm font-medium leading-5",
-              "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
-              "ui-selected:bg-indigo-600 ui-selected:text-white ui-selected:shadow",
-              "text-gray-700 hover:bg-white/40 hover:text-black"
+              "w-full rounded-md py-2 text-sm font-medium leading-5 text-white",
+              "ring-white ring-opacity-60 ring-offset-1 ring-offset-violet-400 focus:outline-none focus:ring-1",
+              "ui-selected:bg-slate-900/80 ui-selected:shadow",
+              "ui-not-selected:text-gray-100 ui-not-selected:hover:bg-white/[0.12] ui-not-selected:hover:text-white"
             )}
           >
             {tab.name}
@@ -80,7 +80,12 @@ const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
       </Tab.List>
       <Tab.Panels>
         {tabs.map((tab) => (
-          <Tab.Panel key={tab.name}>{tab.content}</Tab.Panel>
+          <Tab.Panel
+            key={tab.name}
+            className="rounded-md ring-white ring-opacity-60 ring-offset-1 ring-offset-violet-400 focus:outline-none focus:ring-1"
+          >
+            {tab.content}
+          </Tab.Panel>
         ))}
       </Tab.Panels>
     </Tab.Group>

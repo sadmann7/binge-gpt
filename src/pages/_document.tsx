@@ -1,7 +1,5 @@
+import Meta from "@/components/layout/Meta";
 import { Head, Html, Main, NextScript } from "next/document";
-
-// external imports
-import Meta from "@/components/Meta";
 
 export default function Document() {
   return (

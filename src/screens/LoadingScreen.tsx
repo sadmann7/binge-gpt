@@ -7,7 +7,7 @@ const LoadingScreen = () => {
     >
       <div
         role="progressbar"
-        className="aspect-square w-20 animate-spin rounded-full border-y-4 border-solid border-gray-900 border-t-transparent"
+        className="aspect-square w-20 animate-spin rounded-full border-y-4 border-solid border-gray-50 border-t-transparent"
       />
     </div>
   );

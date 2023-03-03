@@ -1,16 +1,14 @@
+import Tabs from "@/components/Tabs";
+import Button from "@/components/ui/Button";
+import DefaultLayout from "@/layouts/DefaultLayout";
+import ErrorScreen from "@/screens/ErrorScreen";
+import LoadingScreen from "@/screens/LoadingScreen";
+import { api } from "@/utils/api";
 import type { MEDIA_TYPE } from "@prisma/client";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { NextPageWithLayout } from "./_app";
-
-// external imports
-import Button from "@/components/Button";
-import Tabs from "@/components/Tabs";
-import DefaultLayout from "@/layouts/DefaultLayout";
-import ErrorScreen from "@/screens/ErrorScreen";
-import LoadingScreen from "@/screens/LoadingScreen";
-import { api } from "@/utils/api";
 
 const TopShows: NextPageWithLayout = () => {
   const [mediaType, setMediaType] = useState<MEDIA_TYPE | null>(null);
@@ -52,10 +50,10 @@ const TopShows: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Top Shows | WatchCopilot</title>
+        <title>Top Shows | BingeGPT</title>
       </Head>
       <main className="container mx-auto mt-20 mb-10 grid w-full max-w-5xl gap-5 px-4">
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-50 sm:text-3xl">
           Top shows
         </h1>
         <Tabs

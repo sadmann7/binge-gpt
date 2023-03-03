@@ -7,5 +7,5 @@ html {
 }
 
 body {
-  background-color: hsl(210, 20%, 98%);
+  @apply bg-zinc-800 text-gray-50;
 }

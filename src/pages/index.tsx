@@ -1,3 +1,8 @@
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/Button";
+import DefaultLayout from "@/layouts/DefaultLayout";
+import type { GeneratedShow } from "@/types/globals";
+import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { MEDIA_TYPE } from "@prisma/client";
@@ -10,13 +15,6 @@ import { useInView } from "react-intersection-observer";
 import Balancer from "react-wrap-balancer";
 import { z } from "zod";
 import type { NextPageWithLayout } from "./_app";
-
-// external imports
-import Button from "@/components/Button";
-import Modal from "@/components/Modal";
-import DefaultLayout from "@/layouts/DefaultLayout";
-import type { GeneratedShow } from "@/types/globals";
-import { api } from "@/utils/api";
 
 const schema = z.object({
   show: z.string().min(1, { message: "Please enter a show" }),
@@ -73,10 +71,10 @@ const Home: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>WatchCopilot</title>
+        <title>BingeGPT</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-28 mb-10 grid w-full max-w-5xl justify-items-center px-4"
+        className="container mx-auto mt-32 mb-10 grid w-full max-w-5xl justify-items-center px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"
@@ -87,30 +85,33 @@ const Home: NextPageWithLayout = () => {
           className="flex flex-col items-center gap-6"
           variants={itemFadeDown}
         >
-          <h1 className="mx-auto text-center text-4xl font-bold text-gray-900 sm:text-6xl">
+          <h1 className="mx-auto text-center text-4xl font-bold text-gray-50 sm:text-6xl">
             <Balancer ratio={0.5}>
               Discover your next binge-worthy show
             </Balancer>
           </h1>
-          <p className="w-full max-w-3xl text-center text-base text-gray-700 sm:text-lg">
+          <p className="w-full max-w-3xl text-center text-base text-gray-300 sm:text-lg">
             Endless scrolling for something to watch? Input your favorite show
             for AI-generated show recommendations
           </p>
         </motion.div>
         <motion.form
           aria-label="generate show from"
-          className="mt-8 grid w-full max-w-3xl gap-5"
+          className="mt-14 grid w-full max-w-3xl gap-5"
           variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
         >
           <fieldset className="grid gap-3">
-            <label htmlFor="show" className="text-base font-medium text-black">
+            <label
+              htmlFor="show"
+              className="text-base font-medium text-gray-50"
+            >
               What show have you already watched?
             </label>
             <input
               type="text"
               id="show"
-              className="w-full rounded-md border-gray-500 bg-transparent px-4 py-2.5 text-base text-black transition-colors placeholder:text-gray-500"
+              className="w-full rounded-md border-gray-300 bg-transparent px-4 py-2.5 text-base text-gray-50 transition-colors placeholder:text-gray-400"
               placeholder="e.g. Stranger Things"
               {...register("show")}
             />
