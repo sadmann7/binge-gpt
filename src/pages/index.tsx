@@ -229,7 +229,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name ?? ""} details`}
-        className="grid w-full gap-2 rounded-md bg-white/10 py-3.5 px-5 bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter transition-colors hover:bg-white/[0.15] active:bg-white/20"
+        className="grid w-full gap-2 bg-white/10 py-3.5 px-5 bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter transition-colors hover:bg-white/[0.15] active:bg-white/20"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({

@@ -5,6 +5,7 @@ import { Tab } from "@headlessui/react";
 import { MEDIA_TYPE, type FavouritedShow } from "@prisma/client";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
+import { Heart } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { toast } from "react-hot-toast";
@@ -80,7 +81,7 @@ const Tabs = ({ data, mediaType, setMediaType }: TabsProps) => {
         {tabs.map((tab) => (
           <Tab.Panel
             key={tab.name}
-            className="rounded-md ring-white ring-opacity-60 ring-offset-1 ring-offset-violet-400 focus:outline-none focus:ring-1"
+            className="ring-white ring-opacity-60 ring-offset-1 ring-offset-violet-400 focus:outline-none focus:ring-1"
           >
             {tab.content}
           </Tab.Panel>
@@ -153,12 +154,13 @@ const SavedShowCard = ({ show }: { show: FavouritedShow }) => {
           show={findShowMutation.data}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
+          isLikeButtonDisabled={true}
         />
       ) : null}
       <div
         role="button"
         aria-label={`view ${show.name} details`}
-        className="grid cursor-pointer gap-2 rounded-md bg-zinc-700 shadow-md ring-1 ring-gray-500"
+        className="grid w-full gap-2 bg-white/10 bg-blend-multiply shadow-md ring-1 ring-gray-600 backdrop-blur-lg backdrop-filter"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
@@ -181,8 +183,11 @@ const SavedShowCard = ({ show }: { show: FavouritedShow }) => {
             className="h-60 w-full object-cover"
             priority
           />
-          <div className="absolute -bottom-3 right-3 grid h-7 w-7 place-items-center rounded-full bg-black/80 text-xs font-medium text-white ring-2 ring-gray-200 sm:text-sm">
-            {show.favoriteCount}
+          <div className="absolute right-2 -bottom-3 bg-transparent p-1 shadow-md ring-1 ring-gray-600 backdrop-blur-lg backdrop-filter">
+            <div className="flex items-center space-x-2">
+              <Heart className="h-4 w-4 fill-current text-red-500" />
+              <span className="text-sm text-white">{show.favoriteCount}</span>
+            </div>
           </div>
         </div>
         <div className="mx-4 mb-3 grid gap-1">
@@ -193,8 +198,12 @@ const SavedShowCard = ({ show }: { show: FavouritedShow }) => {
             {show.mediaType === "tv" ? "TV show" : "Movie"}
           </p>
           <p className="text-xs text-gray-200 sm:text-sm">
-            {dayjs(show.firstAired).format("YYYY")} -{" "}
-            {show.lastAired ? dayjs(show.lastAired).format("YYYY") : "Present"}
+            {dayjs(show.firstAired).format("YYYY")}
+            {show.mediaType === "movie"
+              ? null
+              : show.mediaType === "tv" && show.lastAired
+              ? ` - ${dayjs(show.lastAired).format("YYYY")}`
+              : "Present"}
           </p>
         </div>
       </div>

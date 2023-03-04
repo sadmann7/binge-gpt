@@ -43,7 +43,7 @@ const Header = () => {
       aria-label="header"
       className={`fixed top-0 left-0 z-20 flex w-full items-center gap-4 transition ${
         isScrolled
-          ? "bg-zinc-700/80 shadow-md backdrop-blur-md backdrop-saturate-150 backdrop-filter duration-300 ease-in-out"
+          ? "bg-gray-700/80 shadow-md backdrop-blur-md backdrop-saturate-150 backdrop-filter duration-300 ease-in-out"
           : "bg-transparent"
       }`}
       onScroll={handleScroll}
@@ -66,7 +66,7 @@ const Header = () => {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-md p-1.5 text-base text-white transition hover:bg-zinc-500 active:scale-95"
+                className="rounded-md p-1.5 text-base text-white transition hover:bg-gray-600 active:scale-95"
               >
                 {link.icon}
               </a>
@@ -75,9 +75,9 @@ const Header = () => {
                 aria-label={`navigate to ${link.name} page`}
                 key={index}
                 href={link.href}
-                className={`rounded-md p-1.5 text-base text-white transition hover:bg-zinc-500 active:scale-95 ${
+                className={`rounded-md p-1.5 text-base text-white transition hover:bg-gray-600 active:scale-95 ${
                   router.pathname === link.href
-                    ? "bg-zinc-500"
+                    ? "bg-gray-600"
                     : "bg-transparent"
                 }`}
               >

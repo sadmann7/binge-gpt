@@ -7,5 +7,5 @@ html {
 }
 
 body {
-  @apply bg-zinc-800 text-gray-50;
+  @apply bg-gray-800 text-gray-50;
 }

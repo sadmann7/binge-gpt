@@ -24,6 +24,7 @@ type ShowModalProps = {
   show: Show;
   isLiked: boolean;
   setIsLiked: Dispatch<SetStateAction<boolean>>;
+  isLikeButtonDisabled?: boolean;
 };
 
 const ShowModal = ({
@@ -33,6 +34,7 @@ const ShowModal = ({
   show,
   isLiked,
   setIsLiked,
+  isLikeButtonDisabled = false,
 }: ShowModalProps) => {
   const apiUtils = api.useContext();
   const [trailerId, setTrailerId] = useState<string>("");
@@ -107,7 +109,7 @@ const ShowModal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-md bg-zinc-800 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden bg-white/10 text-left align-middle bg-blend-multiply shadow-xl backdrop-blur-lg backdrop-filter transition-all">
                 <div className="relative aspect-video">
                   <button
                     type="button"
@@ -167,6 +169,7 @@ const ShowModal = ({
                         isLiked ? "add to favorites" : "remove from favorites"
                       }
                       isLiked={isLiked}
+                      likeCount={updateShowMutation.data?.favoriteCount ?? 0}
                       onClick={() => {
                         setIsLiked(!isLiked);
                         updateShowMutation.mutate({
@@ -185,6 +188,9 @@ const ShowModal = ({
                           voteCount: show.vote_count ?? 0,
                         });
                       }}
+                      disabled={
+                        updateShowMutation.isLoading || isLikeButtonDisabled
+                      }
                     />
                   </div>
                   <div className="flex items-center gap-2 text-xs text-gray-100 sm:text-sm">
@@ -242,7 +248,7 @@ const ShowModal = ({
                       {show.genres.map((genre) => (
                         <span
                           key={genre.id}
-                          className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-black shadow-md"
+                          className="bg-violet-300/80 px-3 py-1 text-xs font-bold text-black bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter"
                         >
                           {genre.name}
                         </span>

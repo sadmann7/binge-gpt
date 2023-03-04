@@ -14,7 +14,7 @@ model GenCount {
     updatedAt DateTime @updatedAt
 }
 
-model FavouritedShow {
+model FavoritedShow {
     id            String     @id @default(cuid())
     tmdbId        Int        @unique
     name          String
