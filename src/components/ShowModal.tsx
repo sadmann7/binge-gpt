@@ -1,5 +1,11 @@
+import OttIcon from "@/components/OttIcon";
+import type { Show } from "@/types/globals";
+import { api } from "@/utils/api";
+import { extractYear } from "@/utils/format";
 import { Dialog, Transition } from "@headlessui/react";
 import type { MEDIA_TYPE } from "@prisma/client";
+import { X } from "lucide-react";
+import Image from "next/image";
 import {
   Fragment,
   useEffect,
@@ -9,34 +15,25 @@ import {
 } from "react";
 import { toast } from "react-hot-toast";
 import ReactPlayer from "react-player/lazy";
-// import { toast } from "react-toastify";
+import LikeButton from "./ui/LikeButton";
 
-// external imports
-import type { Show } from "@/types/globals";
-import { api } from "@/utils/api";
-import { extractYear } from "@/utils/format";
-import { X } from "lucide-react";
-import LikeButton from "./LikeButton";
-
-type ModalProps = {
+type ShowModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   mediaType: MEDIA_TYPE;
   show: Show;
   isLiked: boolean;
   setIsLiked: Dispatch<SetStateAction<boolean>>;
-  isLikeButtonVisible?: boolean;
 };
 
-const Modal = ({
+const ShowModal = ({
   isOpen,
   setIsOpen,
   mediaType,
   show,
   isLiked,
   setIsLiked,
-  isLikeButtonVisible = true,
-}: ModalProps) => {
+}: ShowModalProps) => {
   const apiUtils = api.useContext();
   const [trailerId, setTrailerId] = useState<string>("");
   const [isPlaying, setIsPlaying] = useState(false);
@@ -110,12 +107,12 @@ const Modal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-md bg-white text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-md bg-zinc-800 text-left align-middle shadow-xl transition-all">
                 <div className="relative aspect-video">
                   <button
                     type="button"
                     aria-label="close modal"
-                    className="group absolute top-4 right-4 z-50 flex items-center rounded-full bg-gray-900/80 p-1 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
+                    className="group absolute top-4 right-4 z-50 flex items-center rounded-full bg-gray-900 p-1 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
                     onClick={() => setIsOpen(false)}
                   >
                     <X
@@ -123,63 +120,73 @@ const Modal = ({
                       className="h-4 w-4 text-white group-hover:scale-105 group-active:scale-95"
                     />
                   </button>
-                  <ReactPlayer
-                    style={{ position: "absolute", top: 0, left: 0 }}
-                    url={`https://www.youtube.com/watch?v=${trailerId}`}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    muted={false}
-                    playing={isPlaying}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                  />
-                </div>
-                <div className="mx-6 mt-4 mb-6 grid gap-2">
-                  {isLikeButtonVisible ? (
-                    <div className="flex items-center justify-between gap-5">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
-                      >
-                        {show.title ?? show.original_title ?? show.name}
-                      </Dialog.Title>
-                      <LikeButton
-                        aria-label={
-                          isLiked ? "add to favorites" : "remove from favorites"
-                        }
-                        isLiked={isLiked}
-                        onClick={() => {
-                          setIsLiked(!isLiked);
-                          updateShowMutation.mutate({
-                            tmdbId: show.id,
-                            name:
-                              show.title ?? show.original_title ?? show.name,
-                            description: show.overview ?? "",
-                            image: show.poster_path ?? show.backdrop_path ?? "",
-                            mediaType: mediaType,
-                            favoriteCount: isLiked ? -1 : 1,
-                            trailerId: trailerId,
-                            genres: show.genres.map(
-                              (genre) => genre.name ?? ""
-                            ),
-                            releaseDate:
-                              show.release_date ?? show.first_air_date ?? "",
-                            voteAverage: show.vote_average ?? 0,
-                            voteCount: show.vote_count ?? 0,
-                          });
-                        }}
-                      />
-                    </div>
+                  {trailerId ? (
+                    <ReactPlayer
+                      style={{ position: "absolute", top: 0, left: 0 }}
+                      url={`https://www.youtube.com/watch?v=${trailerId}`}
+                      width="100%"
+                      height="100%"
+                      controls={true}
+                      muted={false}
+                      playing={isPlaying}
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                    />
+                  ) : show.poster_path || show.backdrop_path ? (
+                    <Image
+                      src={
+                        show.poster_path
+                          ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
+                          : `https://image.tmdb.org/t/p/w500${show.backdrop_path}`
+                      }
+                      alt={show.title ?? show.original_title ?? show.name}
+                      width={1920}
+                      height={1080}
+                      className="aspect-video object-cover"
+                    />
                   ) : (
+                    <Image
+                      src="/images/placeholder.webp"
+                      alt={show.title ?? show.original_title ?? show.name}
+                      width={1920}
+                      height={1080}
+                      className="aspect-video object-cover"
+                    />
+                  )}
+                </div>
+                <div className="mx-6 mt-4 mb-6 grid gap-3">
+                  <div className="flex items-center justify-between gap-5">
                     <Dialog.Title
                       as="h3"
-                      className="text-base font-medium leading-6 text-gray-900 sm:text-lg"
+                      className="text-base font-medium leading-6 text-white sm:text-lg"
                     >
                       {show.title ?? show.original_title ?? show.name}
                     </Dialog.Title>
-                  )}
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <LikeButton
+                      aria-label={
+                        isLiked ? "add to favorites" : "remove from favorites"
+                      }
+                      isLiked={isLiked}
+                      onClick={() => {
+                        setIsLiked(!isLiked);
+                        updateShowMutation.mutate({
+                          tmdbId: show.id,
+                          name: show.title ?? show.original_title ?? show.name,
+                          description: show.overview ?? "",
+                          image: show.poster_path ?? show.backdrop_path ?? "",
+                          mediaType: mediaType,
+                          favoriteCount: isLiked ? -1 : 1,
+                          trailerId: trailerId,
+                          genres: show.genres.map((genre) => genre.name ?? ""),
+                          releaseDate:
+                            show.release_date ?? show.first_air_date ?? "",
+                          voteAverage: show.vote_average ?? 0,
+                          voteCount: show.vote_count ?? 0,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-100 sm:text-sm">
                     {show.vote_average ? (
                       <Fragment>
                         <span className="font-medium text-green-600">
@@ -208,24 +215,34 @@ const Modal = ({
                       <span>{show.original_language.toUpperCase()}</span>
                     ) : null}
                   </div>
-                  <div className="text-xs sm:text-sm">
-                    <span className="font-medium text-gray-900">Watch on:</span>{" "}
+                  <p className="text-xs line-clamp-3 sm:text-sm">
+                    {show.overview ?? "No description available."}
+                  </p>
+                  {show.homepage ? (
                     <a
                       href={show.homepage}
                       target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 hover:underline"
+                      rel="noopener noreferrer"
+                      className="mt-1 flex items-center gap-1.5 transition-opacity hover:opacity-80 active:opacity-100"
                     >
-                      {show.homepage ?? "-"}
+                      <OttIcon url={show.homepage} />
+                      <span className="text-xs font-medium sm:text-sm">
+                        Visit website
+                      </span>
                     </a>
-                  </div>
-                  <p className="text-xs line-clamp-3 sm:text-sm">
-                    {show.overview ?? "-"}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <span className="font-medium text-gray-900">Genres:</span>
-                    {show.genres.map((genre) => genre.name).join(", ")}
-                  </div>
+                  ) : null}
+                  {show.genres ? (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {show.genres.map((genre) => (
+                        <span
+                          key={genre.id}
+                          className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-black shadow-md"
+                        >
+                          {genre.name}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -236,4 +253,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default ShowModal;

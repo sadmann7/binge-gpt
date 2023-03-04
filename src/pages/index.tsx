@@ -1,4 +1,4 @@
-import Modal from "@/components/Modal";
+import ShowModal from "@/components/ShowModal";
 import Button from "@/components/ui/Button";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import type { GeneratedShow } from "@/types/globals";
@@ -126,7 +126,7 @@ const Home: NextPageWithLayout = () => {
             variant="primary"
             className="w-full"
             isLoading={generateShowMutation.isLoading}
-            loadingVariant="dots"
+            loadingVariant="spinner"
             disabled={generateShowMutation.isLoading}
           >
             Discover your shows
@@ -191,7 +191,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
   return (
     <motion.div variants={itemFadeDown}>
       {findShowMutation.isSuccess ? (
-        <Modal
+        <ShowModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           mediaType={show.mediaType as MEDIA_TYPE}

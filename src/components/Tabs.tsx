@@ -11,7 +11,7 @@ import type { RouterOutputs } from "@/utils/api";
 import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { extractYear } from "@/utils/format";
-import Modal from "./Modal";
+import ShowModal from "./ShowModal";
 
 type TabsProps = {
   data: RouterOutputs["shows"]["getPaginated"][];
@@ -150,14 +150,13 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
       variants={itemFadeDown}
     >
       {findShowMutation.isSuccess ? (
-        <Modal
+        <ShowModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           mediaType={show.mediaType}
           show={findShowMutation.data}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
-          isLikeButtonVisible={false}
         />
       ) : null}
       <div

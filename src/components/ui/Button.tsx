@@ -1,8 +1,6 @@
+import { Loader2 } from "lucide-react";
 import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import { forwardRef } from "react";
-
-// external imports
-import { Loader2 } from "lucide-react";
 import DotsLoading from "./DotsLoading";
 
 type ButtonProps = {
@@ -29,11 +27,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         className={`${
           variant === "primary"
-            ? "bg-violet-600 text-white enabled:hover:bg-violet-700 enabled:active:bg-violet-600"
+            ? "bg-violet-600 text-white hover:bg-violet-700 active:bg-violet-600"
             : variant === "secondary"
-            ? "bg-gray-500 text-gray-900 enabled:hover:bg-gray-600 enabled:active:bg-gray-500"
-            : "bg-gray-200 text-gray-900 enabled:hover:bg-gray-300 enabled:active:bg-gray-200"
-        } flex h-10 w-full items-center justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-violet-500 focus:ring-offset-1 focus:ring-offset-violet-100 disabled:cursor-not-allowed disabled:bg-opacity-80 ${className}`}
+            ? "bg-gray-50 text-gray-900 hover:bg-gray-200 active:bg-gray-50"
+            : "bg-transparent hover:bg-gray-600 active:bg-gray-500"
+        } flex h-10 w-full items-center justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium shadow-sm transition focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 focus:ring-offset-gray-100 disabled:pointer-events-none disabled:bg-opacity-50 ${className}`}
         ref={ref}
         {...props}
       >

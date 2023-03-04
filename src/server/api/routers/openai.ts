@@ -21,8 +21,11 @@ export const openaiRouter = createTRPCRouter({
       }
 
       const prompt = `Recommend 5 popular shows of the same genre or mood as ${input.show} that I might like. 
-      Make sure to add a small description within 1-2 sentences, and type (tv or movie). You can use the following template: 1. Name - Description - Type.
-      `;
+      Make sure to include the name, short description, and type of media (tv or movie) for each show.
+      """ 
+      You can use the following template: 1. Name - Description - Type of media
+      For example: 1. The Office - A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium. - TV
+      """`;
 
       if (!prompt) {
         throw new TRPCError({
