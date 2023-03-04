@@ -20,8 +20,8 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const prompt = `I have watched ${input.show}. Suggest me 5 popular shows of the same genre or mood that I might like. 
-      Make sure to add a small description, and type (tv or movie). You can use the following template: 1. Name - Description - Type.
+      const prompt = `Recommend 5 popular shows of the same genre or mood as ${input.show} that I might like. 
+      Make sure to add a small description within 1-2 sentences, and type (tv or movie). You can use the following template: 1. Name - Description - Type.
       `;
 
       if (!prompt) {
@@ -31,9 +31,9 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const completion = await ctx.openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
+      const completion = await ctx.openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
         temperature: 0.7,
         max_tokens: 200,
         top_p: 1,
@@ -48,14 +48,14 @@ export const openaiRouter = createTRPCRouter({
           message: "An error occurred during your request.",
         });
       }
-      if (!completion.data.choices[0]?.text) {
+      if (!completion.data.choices[0]?.message?.content) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred during your request.",
         });
       }
 
-      const formattedData = completion.data.choices[0].text
+      const formattedData = completion.data.choices[0].message?.content
         .split("\n")
         .filter((show) => show !== "")
         .map((show) => {
@@ -67,25 +67,8 @@ export const openaiRouter = createTRPCRouter({
           };
         });
 
-      const genCount = await ctx.prisma.genCount.findFirst();
-      if (!genCount) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Generation count not found.",
-        });
-      }
-      await ctx.prisma.genCount.update({
-        where: {
-          id: genCount.id,
-        },
-        data: {
-          count: genCount.count + formattedData.length,
-        },
-      });
-
       return {
         formattedData,
-        generations: genCount.count + formattedData.length,
       };
     }),
 });

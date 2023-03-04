@@ -151,9 +151,11 @@ const Home: NextPageWithLayout = () => {
                 ref={ref}
                 variants={containerReveal}
               >
-                {generateShowMutation.data.formattedData.map((show) => (
-                  <ShowCard key={show.name} show={show} />
-                ))}
+                {generateShowMutation.data.formattedData
+                  .filter((show) => !!show.name)
+                  .map((show) => (
+                    <ShowCard key={show.name} show={show} />
+                  ))}
               </motion.div>
             </div>
           ) : null}
@@ -201,7 +203,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name ?? ""} details`}
-        className="grid w-full gap-2 rounded-md bg-white/10 py-3 px-4 bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter transition-colors hover:bg-white/[0.15] active:bg-white/20"
+        className="grid w-full gap-2 rounded-md bg-white/10 py-3.5 px-5 bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter transition-colors hover:bg-white/[0.15] active:bg-white/20"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
@@ -215,8 +217,8 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
           <h3 className="text-base font-medium text-gray-50 sm:text-lg">
             {show.name ?? ""}
           </h3>
-          <p className="text-sm text-gray-300 sm:text-base">
-            {show.mediaType === "movie" ? "Movie" : "TV Show"}
+          <p className="text-sm text-gray-300">
+            {show.mediaType === "tv" ? "TV Show" : "Movie"}
           </p>
         </div>
         <p className="text-sm text-gray-300 sm:text-base">
