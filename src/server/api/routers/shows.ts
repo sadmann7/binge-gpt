@@ -53,7 +53,7 @@ export const showsRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const savedShows = await ctx.prisma.savedShow.findMany({
+      const shows = await ctx.prisma.favouritedShow.findMany({
         take: input.limit + 1,
         where: {
           mediaType: input.mediaType ?? undefined,
@@ -65,13 +65,13 @@ export const showsRouter = createTRPCRouter({
         },
       });
       let nextCursor: typeof input.cursor | undefined = undefined;
-      if (savedShows.length > input.limit) {
-        const nextItem = savedShows.pop();
+      if (shows.length > input.limit) {
+        const nextItem = shows.pop();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         nextCursor = nextItem!.id;
       }
       return {
-        savedShows,
+        shows,
         nextCursor,
       };
     }),
@@ -87,13 +87,14 @@ export const showsRouter = createTRPCRouter({
         mediaType: z.nativeEnum(MEDIA_TYPE),
         trailerId: z.string(),
         genres: z.array(z.string()),
-        releaseDate: z.string(),
+        firstAired: z.string(),
+        lastAired: z.string(),
         voteAverage: z.number().min(0),
         voteCount: z.number().min(0),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const savedShow = await ctx.prisma.savedShow.upsert({
+      const show = await ctx.prisma.favouritedShow.upsert({
         where: {
           tmdbId: input.tmdbId,
         },
@@ -111,25 +112,26 @@ export const showsRouter = createTRPCRouter({
           favoriteCount: input.favoriteCount,
           trailerId: input.trailerId,
           genres: input.genres,
-          releaseDate: input.releaseDate,
+          firstAired: input.firstAired,
+          lastAired: input.lastAired,
           voteAverage: input.voteAverage,
           voteCount: input.voteCount,
         },
       });
-      if (!savedShow) {
+      if (!show) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Could not save show",
         });
       }
-      if (savedShow.favoriteCount <= 0) {
-        await ctx.prisma.savedShow.delete({
+      if (show.favoriteCount <= 0) {
+        await ctx.prisma.favouritedShow.delete({
           where: {
             tmdbId: input.tmdbId,
           },
         });
       }
 
-      return savedShow;
+      return show;
     }),
 });

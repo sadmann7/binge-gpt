@@ -14,7 +14,7 @@ model GenCount {
     updatedAt DateTime @updatedAt
 }
 
-model SavedShow {
+model FavouritedShow {
     id            String     @id @default(cuid())
     tmdbId        Int        @unique
     name          String
@@ -24,7 +24,8 @@ model SavedShow {
     mediaType     MEDIA_TYPE @default(tv)
     trailerId     String?
     genres        String[]
-    releaseDate   String?
+    firstAired    String?
+    lastAired     String?
     voteAverage   Float?
     voteCount     Int?
     createdAt     DateTime   @default(now())

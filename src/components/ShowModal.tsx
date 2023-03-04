@@ -1,9 +1,9 @@
 import OttIcon from "@/components/OttIcon";
 import type { Show } from "@/types/globals";
 import { api } from "@/utils/api";
-import { extractYear } from "@/utils/format";
 import { Dialog, Transition } from "@headlessui/react";
 import type { MEDIA_TYPE } from "@prisma/client";
+import dayjs from "dayjs";
 import { X } from "lucide-react";
 import Image from "next/image";
 import {
@@ -69,8 +69,8 @@ const ShowModal = ({
           ...data,
           pages: data.pages.map((page) => ({
             ...page,
-            savedShows: page.savedShows.map((savedShow) => ({
-              ...savedShow,
+            shows: page.shows.map((show) => ({
+              ...show,
               favoriteCount: isLiked ? -1 : 1,
             })),
           })),
@@ -178,8 +178,9 @@ const ShowModal = ({
                           favoriteCount: isLiked ? -1 : 1,
                           trailerId: trailerId,
                           genres: show.genres.map((genre) => genre.name ?? ""),
-                          releaseDate:
+                          firstAired:
                             show.release_date ?? show.first_air_date ?? "",
+                          lastAired: show.last_air_date ?? "",
                           voteAverage: show.vote_average ?? 0,
                           voteCount: show.vote_count ?? 0,
                         });
@@ -198,10 +199,15 @@ const ShowModal = ({
                     {show.release_date || show.first_air_date ? (
                       <Fragment>
                         <span>
-                          {extractYear(
+                          {dayjs(
                             show.release_date ?? show.first_air_date
-                          )}
+                          ).format("YYYY")}
                         </span>
+                        {show.last_air_date ? (
+                          <span>
+                            - {dayjs(show.last_air_date).format("YYYY")}
+                          </span>
+                        ) : null}
                         <span>|</span>
                       </Fragment>
                     ) : null}

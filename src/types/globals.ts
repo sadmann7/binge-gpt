@@ -100,5 +100,3 @@ export enum FORM_MEDIA_TYPE {
   TV = "TV show",
   MOVIE = "Movie",
 }
-
-export type Form_Media_Type = "Not specified" | "TV show" | "Movie";

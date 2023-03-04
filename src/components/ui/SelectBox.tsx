@@ -28,7 +28,6 @@ const SelectBox = <TInputs extends FieldValues>({
       defaultValue={selected.value}
       render={({ field: { onChange } }) => (
         <Listbox
-          as="div"
           value={selected}
           onChange={(val) => {
             onChange(val.value);

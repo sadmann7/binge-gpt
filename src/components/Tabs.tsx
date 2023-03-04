@@ -1,16 +1,14 @@
+import type { RouterOutputs } from "@/utils/api";
+import { api } from "@/utils/api";
+import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { Tab } from "@headlessui/react";
-import { MEDIA_TYPE, type SavedShow } from "@prisma/client";
+import { MEDIA_TYPE, type FavouritedShow } from "@prisma/client";
+import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { toast } from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
-
-// external imports
-import type { RouterOutputs } from "@/utils/api";
-import { api } from "@/utils/api";
-import { containerReveal, itemFadeDown } from "@/utils/constants";
-import { extractYear } from "@/utils/format";
 import ShowModal from "./ShowModal";
 
 type TabsProps = {
@@ -107,16 +105,13 @@ const Shows = ({
       animate="visible"
       variants={containerReveal}
     >
-      {data[0]?.savedShows.length ? (
+      {data[0]?.shows.length ? (
         data.map((page) =>
-          page.savedShows.map((show) => (
-            <SavedShowCard key={show.id} show={show} />
-          ))
+          page.shows.map((show) => <SavedShowCard key={show.id} show={show} />)
         )
       ) : (
         <div className="col-span-full mx-auto text-base text-gray-50 sm:text-lg">
-          No{" "}
-          {data[0]?.savedShows[0]?.mediaType === "tv" ? "TV shows" : "movies"}{" "}
+          No {data[0]?.shows[0]?.mediaType === "tv" ? "TV shows" : "movies"}{" "}
           favorited yet
         </div>
       )}
@@ -125,7 +120,7 @@ const Shows = ({
 };
 
 // SavedShowCard component
-const SavedShowCard = ({ show }: { show: SavedShow }) => {
+const SavedShowCard = ({ show }: { show: FavouritedShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -146,7 +141,6 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
 
   return (
     <motion.div
-      className="rounded-md bg-blue-900/20"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       variants={itemFadeDown}
@@ -164,7 +158,7 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name} details`}
-        className="grid cursor-pointer gap-2 overflow-hidden rounded-md bg-white/90 shadow-md ring-1 ring-gray-200"
+        className="grid cursor-pointer gap-2 rounded-md bg-zinc-700 shadow-md ring-1 ring-gray-500"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
@@ -191,15 +185,16 @@ const SavedShowCard = ({ show }: { show: SavedShow }) => {
             {show.favoriteCount}
           </div>
         </div>
-        <div className="mx-4 mb-3">
-          <h3 className="flex-1 text-sm font-semibold text-gray-900 line-clamp-1 sm:text-base">
+        <div className="mx-4 mb-3 grid gap-1">
+          <h3 className="flex-1 text-sm font-semibold text-white line-clamp-1 sm:text-base">
             {show.name}
           </h3>
-          <p className="text-xs text-gray-600 sm:text-sm">
+          <p className="text-xs text-gray-200 sm:text-sm">
             {show.mediaType === "tv" ? "TV show" : "Movie"}
           </p>
-          <p className="text-xs text-gray-600 sm:text-sm">
-            {extractYear(show.releaseDate ?? "") || "-"}
+          <p className="text-xs text-gray-200 sm:text-sm">
+            {dayjs(show.firstAired).format("YYYY")} -{" "}
+            {show.lastAired ? dayjs(show.lastAired).format("YYYY") : "Present"}
           </p>
         </div>
       </div>
