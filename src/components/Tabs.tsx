@@ -114,8 +114,10 @@ const Shows = ({
           ))
         )
       ) : (
-        <div className="col-span-full mx-auto text-base text-gray-900 sm:text-lg">
-          No shows saved yet
+        <div className="col-span-full mx-auto text-base text-gray-50 sm:text-lg">
+          No{" "}
+          {data[0]?.savedShows[0]?.mediaType === "tv" ? "TV shows" : "movies"}{" "}
+          favorited yet
         </div>
       )}
     </motion.div>

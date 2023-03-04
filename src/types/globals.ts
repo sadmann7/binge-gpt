@@ -94,3 +94,11 @@ export type GeneratedShow = {
   description?: string;
   mediaType?: MEDIA_TYPE;
 };
+
+export enum FORM_MEDIA_TYPE {
+  NOT_SPECIFIED = "Not specified",
+  TV = "TV show",
+  MOVIE = "Movie",
+}
+
+export type Form_Media_Type = "Not specified" | "TV show" | "Movie";

@@ -1,3 +1,4 @@
+import { FORM_MEDIA_TYPE } from "@/types/globals";
 import { configuration } from "@/utils/openai";
 import type { MEDIA_TYPE } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -9,6 +10,7 @@ export const openaiRouter = createTRPCRouter({
     .input(
       z.object({
         show: z.string().min(1),
+        mediaType: z.nativeEnum(FORM_MEDIA_TYPE),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -20,8 +22,15 @@ export const openaiRouter = createTRPCRouter({
         });
       }
 
-      const prompt = `Recommend 5 popular shows of the same genre or mood as ${input.show} that I might like. 
-      Make sure to include the name, short description, and type of media (tv or movie) for each show.
+      const prompt = `Recommend me 5 popular ${
+        input.mediaType === FORM_MEDIA_TYPE.TV
+          ? "TV shows only"
+          : input.mediaType === FORM_MEDIA_TYPE.MOVIE
+          ? "movies only"
+          : "TV shows and movies"
+      } of the same genre or mood as ${input.show} that I might like. 
+      Make sure to recommend only ${input.mediaType} type shows.
+      Make sure to include the name, short description (between 1-2 sentences), and type of media (tv or movie) for each show.
       """ 
       You can use the following template: 1. Name - Description - Type of media
       For example: 1. The Office - A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium. - TV

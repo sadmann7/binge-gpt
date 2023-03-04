@@ -1,7 +1,8 @@
 import ShowModal from "@/components/ShowModal";
 import Button from "@/components/ui/Button";
+import SelectBox from "@/components/ui/SelectBox";
 import DefaultLayout from "@/layouts/DefaultLayout";
-import type { GeneratedShow } from "@/types/globals";
+import { FORM_MEDIA_TYPE, type GeneratedShow } from "@/types/globals";
 import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,10 +19,16 @@ import type { NextPageWithLayout } from "./_app";
 
 const schema = z.object({
   show: z.string().min(1, { message: "Please enter a show" }),
+  mediaType: z.nativeEnum(FORM_MEDIA_TYPE),
 });
 type Inputs = z.infer<typeof schema>;
 
 const Home: NextPageWithLayout = () => {
+  const formMediaTypes = Object.values(FORM_MEDIA_TYPE).map((mediaType) => ({
+    value: mediaType,
+    label: mediaType,
+  }));
+
   const generateShowMutation = api.openai.generate.useMutation({
     onSuccess: (data) => {
       console.log(data);
@@ -32,7 +39,7 @@ const Home: NextPageWithLayout = () => {
   });
 
   // react-hook-form
-  const { register, handleSubmit, formState } = useForm<Inputs>({
+  const { register, handleSubmit, formState, control } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -74,7 +81,7 @@ const Home: NextPageWithLayout = () => {
         <title>BingeGPT</title>
       </Head>
       <motion.main
-        className="container mx-auto mt-32 mb-10 grid w-full max-w-5xl justify-items-center px-4"
+        className="container mx-auto mt-32 mb-10 grid w-full max-w-2xl justify-items-center px-4"
         initial="hidden"
         whileInView="visible"
         animate="visible"
@@ -90,14 +97,14 @@ const Home: NextPageWithLayout = () => {
               Discover your next binge-worthy show
             </Balancer>
           </h1>
-          <p className="w-full max-w-3xl text-center text-base text-gray-300 sm:text-lg">
+          <p className="w-full text-center text-base text-gray-300 sm:text-lg">
             Endless scrolling for something to watch? Input your favorite show
             for AI-generated show recommendations
           </p>
         </motion.div>
         <motion.form
           aria-label="generate show from"
-          className="mt-14 grid w-full max-w-3xl gap-5"
+          className="mt-14 grid w-full max-w-xl gap-5"
           variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
         >
@@ -112,12 +119,31 @@ const Home: NextPageWithLayout = () => {
               type="text"
               id="show"
               className="w-full rounded-md border-gray-300 bg-transparent px-4 py-2.5 text-base text-gray-50 transition-colors placeholder:text-gray-400"
-              placeholder="e.g. Stranger Things"
+              placeholder="e.g. Stranger things"
               {...register("show")}
             />
             {formState.errors.show ? (
               <p className="-mt-1 text-sm font-medium text-red-500">
                 {formState.errors.show.message}
+              </p>
+            ) : null}
+          </fieldset>
+          <fieldset className="grid gap-3">
+            <label
+              htmlFor="mediaType"
+              className="text-base font-medium text-gray-50"
+            >
+              What type of show are you looking for?
+            </label>
+            <SelectBox<Inputs>
+              control={control}
+              name="mediaType"
+              options={formMediaTypes}
+            />
+
+            {formState.errors.mediaType ? (
+              <p className="-mt-1 text-sm font-medium text-red-500">
+                {formState.errors.mediaType.message}
               </p>
             ) : null}
           </fieldset>
@@ -133,7 +159,7 @@ const Home: NextPageWithLayout = () => {
           </Button>
         </motion.form>
         <motion.div
-          className="mt-16 w-full max-w-3xl"
+          className="mt-16 w-full max-w-xl"
           ref={generatedRef}
           variants={itemFadeDown}
         >
@@ -218,7 +244,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
             {show.name ?? ""}
           </h3>
           <p className="text-sm text-gray-300">
-            {show.mediaType === "tv" ? "TV Show" : "Movie"}
+            {show.mediaType === "tv" ? "TV show" : "Movie"}
           </p>
         </div>
         <p className="text-sm text-gray-300 sm:text-base">
