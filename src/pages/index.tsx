@@ -22,7 +22,7 @@ const schema = z.object({
 type Inputs = z.infer<typeof schema>;
 
 const Home: NextPageWithLayout = () => {
-  const generateAIShowMutation = api.openai.generateAI.useMutation({
+  const generateShowMutation = api.openai.generate.useMutation({
     onSuccess: (data) => {
       console.log(data);
     },
@@ -37,19 +37,19 @@ const Home: NextPageWithLayout = () => {
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // console.log(data);
-    await generateAIShowMutation.mutateAsync({ ...data });
+    await generateShowMutation.mutateAsync({ ...data });
   };
 
   // scroll to recommended shows
   const generatedRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (!generatedRef.current || !generateAIShowMutation.data) return;
+    if (!generatedRef.current || !generateShowMutation.data) return;
     const offset = generatedRef.current.offsetTop - 90;
     window.scrollTo({
       top: offset,
       behavior: "smooth",
     });
-  }, [generateAIShowMutation.data]);
+  }, [generateShowMutation.data]);
 
   // framer-motion
   const [ref, inView] = useInView({
@@ -125,25 +125,25 @@ const Home: NextPageWithLayout = () => {
             aria-label="discover your shows"
             variant="primary"
             className="w-full"
-            isLoading={generateAIShowMutation.isLoading}
+            isLoading={generateShowMutation.isLoading}
             loadingVariant="dots"
-            disabled={generateAIShowMutation.isLoading}
+            disabled={generateShowMutation.isLoading}
           >
             Discover your shows
           </Button>
         </motion.form>
         <motion.div
-          className="mt-12 w-full max-w-3xl"
+          className="mt-16 w-full max-w-3xl"
           ref={generatedRef}
           variants={itemFadeDown}
         >
-          {generateAIShowMutation.isError ? (
+          {generateShowMutation.isError ? (
             <p className="text-red-500">
-              {generateAIShowMutation.error?.message}
+              {generateShowMutation.error?.message}
             </p>
-          ) : generateAIShowMutation.isSuccess ? (
+          ) : generateShowMutation.isSuccess ? (
             <div className="grid place-items-center gap-8">
-              <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+              <h2 className="text-2xl font-bold text-gray-50 sm:text-3xl">
                 Recommended shows
               </h2>
               <motion.div
@@ -151,7 +151,7 @@ const Home: NextPageWithLayout = () => {
                 ref={ref}
                 variants={containerReveal}
               >
-                {generateAIShowMutation.data.formattedData.map((show) => (
+                {generateShowMutation.data.formattedData.map((show) => (
                   <ShowCard key={show.name} show={show} />
                 ))}
               </motion.div>
@@ -187,7 +187,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
   }
 
   return (
-    <motion.div className="rounded-md bg-blue-900/20" variants={itemFadeDown}>
+    <motion.div variants={itemFadeDown}>
       {findShowMutation.isSuccess ? (
         <Modal
           isOpen={isOpen}
@@ -201,7 +201,7 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
       <div
         role="button"
         aria-label={`view ${show.name ?? ""} details`}
-        className="flex cursor-pointer flex-col gap-2 rounded-md bg-white/90 p-4 shadow-md ring-1 ring-gray-200 transition-colors hover:bg-gray-100 active:bg-gray-50"
+        className="grid w-full gap-2 rounded-md bg-white/10 py-3 px-4 bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter transition-colors hover:bg-white/[0.15] active:bg-white/20"
         onClick={() => {
           if (!show.name || !show.mediaType) return;
           findShowMutation.mutate({
@@ -211,16 +211,16 @@ const ShowCard = ({ show }: { show: GeneratedShow }) => {
           setIsOpen(true);
         }}
       >
-        <div className="flex justify-between gap-2">
-          <h3 className="flex-1 text-base font-medium text-gray-900 sm:text-lg">
-            {show.name}
+        <div className="flex w-full items-center justify-between gap-5">
+          <h3 className="text-base font-medium text-gray-50 sm:text-lg">
+            {show.name ?? ""}
           </h3>
-          <span className="text-xs text-gray-700 sm:text-sm">
-            {show.mediaType === "tv" ? "TV show" : "Movie"}
-          </span>
+          <p className="text-sm text-gray-300 sm:text-base">
+            {show.mediaType === "movie" ? "Movie" : "TV Show"}
+          </p>
         </div>
-        <p className="text-xs text-gray-700 line-clamp-2 sm:text-sm">
-          {show.description}
+        <p className="text-sm text-gray-300 sm:text-base">
+          {show.description ?? ""}
         </p>
       </div>
     </motion.div>
