@@ -8,9 +8,9 @@ import type { MEDIA_TYPE } from "@prisma/client";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import type { NextPageWithLayout } from "./_app";
+import type { NextPageWithLayout } from "../_app";
 
-const TopShows: NextPageWithLayout = () => {
+const FavoritedShows: NextPageWithLayout = () => {
   const [mediaType, setMediaType] = useState<MEDIA_TYPE | null>(null);
 
   // shows query
@@ -50,11 +50,11 @@ const TopShows: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Top Shows | BingeGPT</title>
+        <title>Favorited Shows | BingeGPT</title>
       </Head>
       <main className="container mx-auto mt-20 mb-10 grid w-full max-w-5xl gap-5 px-4">
         <h1 className="text-2xl font-semibold tracking-tight text-gray-50 sm:text-3xl">
-          Top shows
+          Favorited shows
         </h1>
         <Tabs
           data={showsQuery.data?.pages}
@@ -82,6 +82,6 @@ const TopShows: NextPageWithLayout = () => {
   );
 };
 
-export default TopShows;
+export default FavoritedShows;
 
-TopShows.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;
+FavoritedShows.getLayout = (page) => <DefaultLayout>{page}</DefaultLayout>;

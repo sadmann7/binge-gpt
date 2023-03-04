@@ -2,7 +2,7 @@ import type { RouterOutputs } from "@/utils/api";
 import { api } from "@/utils/api";
 import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { Tab } from "@headlessui/react";
-import { MEDIA_TYPE, type FavouritedShow } from "@prisma/client";
+import { MEDIA_TYPE, type FavoritedShow } from "@prisma/client";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
@@ -108,20 +108,21 @@ const Shows = ({
     >
       {data[0]?.shows.length ? (
         data.map((page) =>
-          page.shows.map((show) => <SavedShowCard key={show.id} show={show} />)
+          page.shows.map((show) => (
+            <FavoritedShowCard key={show.id} show={show} />
+          ))
         )
       ) : (
         <div className="col-span-full mx-auto text-base text-gray-50 sm:text-lg">
-          No {data[0]?.shows[0]?.mediaType === "tv" ? "TV shows" : "movies"}{" "}
-          favorited yet
+          No shows favorited yet
         </div>
       )}
     </motion.div>
   );
 };
 
-// SavedShowCard component
-const SavedShowCard = ({ show }: { show: FavouritedShow }) => {
+// FavoritedShowCard component
+const FavoritedShowCard = ({ show }: { show: FavoritedShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 

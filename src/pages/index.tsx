@@ -1,6 +1,6 @@
 import ShowModal from "@/components/ShowModal";
 import Button from "@/components/ui/Button";
-import SelectBox from "@/components/ui/SelectBox";
+import DropdownSelect from "@/components/ui/DropdownSelect";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { FORM_MEDIA_TYPE, type GeneratedShow } from "@/types/globals";
 import { api } from "@/utils/api";
@@ -118,7 +118,7 @@ const Home: NextPageWithLayout = () => {
             <input
               type="text"
               id="show"
-              className="w-full rounded-md border-gray-300 bg-transparent px-4 py-2.5 text-base text-gray-50 transition-colors placeholder:text-gray-400"
+              className="w-full rounded-md border-gray-400 bg-transparent px-4 py-2.5 text-base text-gray-50 transition-colors placeholder:text-gray-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
               placeholder="e.g. Stranger things"
               {...register("show")}
             />
@@ -135,7 +135,7 @@ const Home: NextPageWithLayout = () => {
             >
               What type of show are you looking for?
             </label>
-            <SelectBox<Inputs>
+            <DropdownSelect<Inputs>
               control={control}
               name="mediaType"
               options={formMediaTypes}

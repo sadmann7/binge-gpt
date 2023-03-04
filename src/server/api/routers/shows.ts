@@ -53,7 +53,7 @@ export const showsRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const shows = await ctx.prisma.favouritedShow.findMany({
+      const shows = await ctx.prisma.favoritedShow.findMany({
         take: input.limit + 1,
         where: {
           mediaType: input.mediaType ?? undefined,
@@ -94,7 +94,7 @@ export const showsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const show = await ctx.prisma.favouritedShow.upsert({
+      const show = await ctx.prisma.favoritedShow.upsert({
         where: {
           tmdbId: input.tmdbId,
         },
@@ -125,7 +125,7 @@ export const showsRouter = createTRPCRouter({
         });
       }
       if (show.favoriteCount <= 0) {
-        await ctx.prisma.favouritedShow.delete({
+        await ctx.prisma.favoritedShow.delete({
           where: {
             tmdbId: input.tmdbId,
           },

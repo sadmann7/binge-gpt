@@ -15,7 +15,7 @@ const navLinks = [
   {
     name: "Top ",
     icon: <Heart aria-hidden="true" className="h-6 w-6" />,
-    href: "/top-shows",
+    href: "/shows/favorited-shows",
     isExternal: false,
   },
 ];
