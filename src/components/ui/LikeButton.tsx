@@ -23,10 +23,7 @@ const LikeButton = ({
   ...props
 }: LikeButtonProps) => {
   return (
-    <div className="flex items-center gap-2">
-      {likeCount > 0 ? (
-        <span className="text-sm font-semibold text-white">{likeCount}</span>
-      ) : null}
+    <div className="flex items-center gap-2.5">
       <motion.button
         className={`h-5 w-5 disabled:pointer-events-none disabled:opacity-80 ${className}`}
         whileHover={{ scale: disabled ? 1 : 1.1 }}
@@ -39,6 +36,9 @@ const LikeButton = ({
           className={`text-red-600 ${isLiked ? "fill-current" : ""}`}
         />
       </motion.button>
+      {likeCount > 0 ? (
+        <span className="text-sm font-semibold text-white">{likeCount}</span>
+      ) : null}
     </div>
   );
 };

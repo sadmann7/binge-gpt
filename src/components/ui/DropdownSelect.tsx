@@ -1,5 +1,5 @@
 import { Listbox, Transition } from "@headlessui/react";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronUp } from "lucide-react";
 import { Fragment, useState } from "react";
 import type { Control, FieldValues, Path, PathValue } from "react-hook-form";
 import { Controller } from "react-hook-form";
@@ -38,8 +38,8 @@ const DropdownSelect = <TInputs extends FieldValues>({
             <Listbox.Button className="relative w-full cursor-pointer rounded-md border border-gray-400 py-2.5 pl-4 pr-10 text-left text-base text-gray-300 shadow-md transition-colors focus:outline-none focus-visible:border-violet-500 focus-visible:ring-1 focus-visible:ring-violet-500">
               <span className="block truncate">{selected?.label}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronDown
-                  className="h-5 w-5 text-gray-400"
+                <ChevronUp
+                  className="h-5 w-5 text-gray-400 transition-transform ui-open:rotate-180"
                   aria-hidden="true"
                 />
               </span>

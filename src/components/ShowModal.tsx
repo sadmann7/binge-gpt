@@ -3,8 +3,8 @@ import type { Show } from "@/types/globals";
 import { api } from "@/utils/api";
 import { Dialog, Transition } from "@headlessui/react";
 import type { MEDIA_TYPE } from "@prisma/client";
+import { useIsMutating } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { X } from "lucide-react";
 import Image from "next/image";
 import {
   Fragment,
@@ -38,7 +38,6 @@ const ShowModal = ({
 }: ShowModalProps) => {
   const apiUtils = api.useContext();
   const [trailerId, setTrailerId] = useState<string>("");
-  const [isPlaying, setIsPlaying] = useState(false);
 
   // set trailerId
   useEffect(() => {
@@ -50,6 +49,11 @@ const ShowModal = ({
       setTrailerId(show.videos.results[trailerIndex]?.key ?? "");
     }
   }, [show]);
+
+  // get show query
+  const getShowQuery = api.shows.getOne.useQuery(show?.id, {
+    enabled: false,
+  });
 
   // update show mutation
   const updateShowMutation = api.shows.update.useMutation({
@@ -84,6 +88,15 @@ const ShowModal = ({
     },
   });
 
+  // refetech
+  const number = useIsMutating();
+  useEffect(() => {
+    if (number === 0) {
+      void apiUtils.shows.getPaginated.invalidate();
+      void apiUtils.shows.getOne.invalidate();
+    }
+  }, [apiUtils, number]);
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setIsOpen}>
@@ -111,28 +124,28 @@ const ShowModal = ({
             >
               <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden bg-white/10 text-left align-middle bg-blend-multiply shadow-xl backdrop-blur-lg backdrop-filter transition-all">
                 <div className="relative aspect-video">
-                  <button
-                    type="button"
-                    aria-label="close modal"
-                    className="group absolute top-4 right-4 z-50 flex items-center rounded-full bg-gray-900 p-1 ring-2 ring-white transition-transform hover:scale-105 active:scale-95"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <X
-                      aria-hidden="true"
-                      className="h-4 w-4 text-white group-hover:scale-105 group-active:scale-95"
-                    />
-                  </button>
                   {trailerId ? (
                     <ReactPlayer
                       style={{ position: "absolute", top: 0, left: 0 }}
                       url={`https://www.youtube.com/watch?v=${trailerId}`}
                       width="100%"
                       height="100%"
-                      controls={true}
-                      muted={false}
-                      playing={isPlaying}
-                      onPlay={() => setIsPlaying(true)}
-                      onPause={() => setIsPlaying(false)}
+                      config={{
+                        youtube: {
+                          playerVars: {
+                            autoplay: 1,
+                            controls: 1,
+                            disablekb: 1,
+                            fs: 0,
+                            modestbranding: 1,
+                            rel: 0,
+                            showinfo: 0,
+                            iv_load_policy: 3,
+                            playsinline: 1,
+                            origin: "https://www.youtube.com",
+                          },
+                        },
+                      }}
                     />
                   ) : show.poster_path || show.backdrop_path ? (
                     <Image
@@ -169,7 +182,11 @@ const ShowModal = ({
                         isLiked ? "add to favorites" : "remove from favorites"
                       }
                       isLiked={isLiked}
-                      likeCount={updateShowMutation.data?.favoriteCount ?? 0}
+                      likeCount={
+                        updateShowMutation.data?.favoriteCount ??
+                        getShowQuery.data?.favoriteCount ??
+                        0
+                      }
                       onClick={() => {
                         setIsLiked(!isLiked);
                         updateShowMutation.mutate({
@@ -244,11 +261,11 @@ const ShowModal = ({
                     </a>
                   ) : null}
                   {show.genres ? (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {show.genres.map((genre) => (
                         <span
                           key={genre.id}
-                          className="bg-violet-300/80 px-3 py-1 text-xs font-bold text-black bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter"
+                          className="bg-violet-200/80 px-3 py-1 text-xs font-bold text-gray-900 bg-blend-multiply shadow-md backdrop-blur-lg backdrop-filter"
                         >
                           {genre.name}
                         </span>

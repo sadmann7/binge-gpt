@@ -124,7 +124,7 @@ const Shows = ({
 // FavoritedShowCard component
 const FavoritedShowCard = ({ show }: { show: FavoritedShow }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(true);
 
   // find show mutation
   const findShowMutation = api.shows.findOne.useMutation({
@@ -184,10 +184,12 @@ const FavoritedShowCard = ({ show }: { show: FavoritedShow }) => {
             className="h-60 w-full object-cover"
             priority
           />
-          <div className="absolute right-2 -bottom-3 bg-transparent p-1 shadow-md ring-1 ring-gray-600 backdrop-blur-lg backdrop-filter">
+          <div className="absolute -bottom-4 right-0 bg-gray-600/80 px-2 py-1.5 shadow-md">
             <div className="flex items-center space-x-2">
               <Heart className="h-4 w-4 fill-current text-red-500" />
-              <span className="text-sm text-white">{show.favoriteCount}</span>
+              <span className="text-sm font-medium text-white">
+                {show.favoriteCount}
+              </span>
             </div>
           </div>
         </div>

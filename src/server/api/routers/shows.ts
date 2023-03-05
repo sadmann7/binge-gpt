@@ -76,6 +76,21 @@ export const showsRouter = createTRPCRouter({
       };
     }),
 
+  getOne: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
+    const show = await ctx.prisma.favoritedShow.findUnique({
+      where: {
+        tmdbId: input,
+      },
+    });
+    if (!show) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Could not find show",
+      });
+    }
+    return show;
+  }),
+
   update: publicProcedure
     .input(
       z.object({

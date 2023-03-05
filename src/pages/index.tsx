@@ -8,6 +8,7 @@ import { containerReveal, itemFadeDown } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { MEDIA_TYPE } from "@prisma/client";
 import { motion, useAnimation } from "framer-motion";
+import { AlertCircle, Check } from "lucide-react";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -39,9 +40,11 @@ const Home: NextPageWithLayout = () => {
   });
 
   // react-hook-form
-  const { register, handleSubmit, formState, control } = useForm<Inputs>({
-    resolver: zodResolver(schema),
-  });
+  const { register, handleSubmit, formState, control, watch } = useForm<Inputs>(
+    {
+      resolver: zodResolver(schema),
+    }
+  );
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // console.log(data);
     await generateShowMutation.mutateAsync({ ...data });
@@ -89,7 +92,7 @@ const Home: NextPageWithLayout = () => {
         variants={containerReveal}
       >
         <motion.div
-          className="flex flex-col items-center gap-6"
+          className="flex flex-col items-center gap-8"
           variants={itemFadeDown}
         >
           <h1 className="mx-auto text-center text-4xl font-bold text-gray-50 sm:text-6xl">
@@ -104,15 +107,22 @@ const Home: NextPageWithLayout = () => {
         </motion.div>
         <motion.form
           aria-label="generate show from"
-          className="mt-14 grid w-full max-w-xl gap-5"
+          className="mt-14 grid w-full max-w-xl gap-7"
           variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
         >
-          <fieldset className="grid gap-3">
+          <fieldset className="grid gap-5">
             <label
               htmlFor="show"
-              className="text-base font-medium text-gray-50"
+              className="flex items-center gap-3 text-sm font-medium text-white sm:text-base"
             >
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-gray-600 text-sm text-white sm:text-base">
+                {watch("show") ? (
+                  <Check aria-hidden="true" className="h-5 w-5" />
+                ) : (
+                  1
+                )}
+              </span>
               What show have you already watched?
             </label>
             <input
@@ -123,16 +133,22 @@ const Home: NextPageWithLayout = () => {
               {...register("show")}
             />
             {formState.errors.show ? (
-              <p className="-mt-1 text-sm font-medium text-red-500">
-                {formState.errors.show.message}
-              </p>
+              <div className="flex items-center gap-2 text-red-500">
+                <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                <p className="text-sm font-medium">
+                  {formState.errors.show.message}
+                </p>
+              </div>
             ) : null}
           </fieldset>
-          <fieldset className="grid gap-3">
+          <fieldset className="grid gap-5">
             <label
               htmlFor="mediaType"
-              className="text-base font-medium text-gray-50"
+              className="flex items-center gap-3 text-sm font-medium text-white sm:text-base"
             >
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-gray-600 text-sm text-white sm:text-base">
+                {true ? <Check aria-hidden="true" className="h-5 w-5" /> : 2}
+              </span>
               What type of show are you looking for?
             </label>
             <DropdownSelect<Inputs>
@@ -142,9 +158,12 @@ const Home: NextPageWithLayout = () => {
             />
 
             {formState.errors.mediaType ? (
-              <p className="-mt-1 text-sm font-medium text-red-500">
-                {formState.errors.mediaType.message}
-              </p>
+              <div className="flex items-center gap-2 text-red-500">
+                <AlertCircle aria-hidden="true" className="h-4 w-4" />
+                <p className="text-sm font-medium">
+                  {formState.errors.mediaType.message}
+                </p>
+              </div>
             ) : null}
           </fieldset>
           <Button
