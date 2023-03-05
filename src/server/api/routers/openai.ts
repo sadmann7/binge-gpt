@@ -21,7 +21,7 @@ export const openaiRouter = createTRPCRouter({
             "OpenAI API key not configured, please follow instructions in README.md",
         });
       }
-      const prompt = `Recommend me 5 popular ${
+      const prompt = `Recommend 5 popular ${
         input.mediaType === FORM_MEDIA_TYPE.TV
           ? "TV shows only"
           : input.mediaType === FORM_MEDIA_TYPE.MOVIE
@@ -51,7 +51,14 @@ export const openaiRouter = createTRPCRouter({
 
       const completion = await ctx.openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a tv show and movie recommender bot. You will be given a list of shows and movies and you will recommend 5 shows and movies of the same genre or mood as the given shows and movies.",
+          },
+          { role: "user", content: prompt },
+        ],
         temperature: 0.7,
         max_tokens: 200,
         top_p: 1,
