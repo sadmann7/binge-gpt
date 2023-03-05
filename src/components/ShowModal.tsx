@@ -52,7 +52,7 @@ const ShowModal = ({
 
   // get show query
   const getShowQuery = api.shows.getOne.useQuery(show?.id, {
-    enabled: false,
+    enabled: !!show?.id,
   });
 
   // update show mutation

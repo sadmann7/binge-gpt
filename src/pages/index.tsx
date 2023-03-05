@@ -126,7 +126,7 @@ const Home: NextPageWithLayout = () => {
               <span>
                 What shows have you watched?{" "}
                 <span className="text-gray-400">
-                  (for multiple shows, separate with a comma)
+                  (separate shows with commas)
                 </span>
               </span>
             </label>
