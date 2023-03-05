@@ -9,7 +9,7 @@ export const openaiRouter = createTRPCRouter({
   generate: publicProcedure
     .input(
       z.object({
-        show: z.string().min(1),
+        shows: z.string().min(1),
         mediaType: z.nativeEnum(FORM_MEDIA_TYPE),
       })
     )
@@ -21,14 +21,20 @@ export const openaiRouter = createTRPCRouter({
             "OpenAI API key not configured, please follow instructions in README.md",
         });
       }
-
       const prompt = `Recommend me 5 popular ${
         input.mediaType === FORM_MEDIA_TYPE.TV
           ? "TV shows only"
           : input.mediaType === FORM_MEDIA_TYPE.MOVIE
           ? "movies only"
           : "TV shows and movies"
-      } of the same genre or mood as ${input.show} that I might like. 
+      } of the same genre or mood as ${
+        input.shows.split(",").length > 1
+          ? input.shows
+              .split(",")
+              .map((show, index) => `${index + 1}. ${show.trim()}`)
+              .join(", ")
+          : input.shows
+      } that I might like. 
       Make sure to recommend only ${input.mediaType} type shows.
       Make sure to include the name, short description (between 1-2 sentences), and type of media (tv or movie) for each show.
       """ 

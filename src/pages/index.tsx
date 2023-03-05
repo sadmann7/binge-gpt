@@ -19,7 +19,7 @@ import { z } from "zod";
 import type { NextPageWithLayout } from "./_app";
 
 const schema = z.object({
-  show: z.string().min(1, { message: "Please enter a show" }),
+  shows: z.string().min(1, { message: "Please enter a show" }),
   mediaType: z.nativeEnum(FORM_MEDIA_TYPE),
 });
 type Inputs = z.infer<typeof schema>;
@@ -46,7 +46,6 @@ const Home: NextPageWithLayout = () => {
     }
   );
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    // console.log(data);
     await generateShowMutation.mutateAsync({ ...data });
   };
 
@@ -100,43 +99,49 @@ const Home: NextPageWithLayout = () => {
               Discover your next binge-worthy show
             </Balancer>
           </h1>
-          <p className="w-full text-center text-base text-gray-300 sm:text-lg">
-            Endless scrolling for something to watch? Input your favorite show
-            for AI-generated show recommendations
+          <p className="max-w-xl text-center text-base text-gray-300 sm:text-lg">
+            Endless scrolling for something to watch? Input your favorite shows
+            to get show recommendations with AI
           </p>
         </motion.div>
         <motion.form
-          aria-label="generate show from"
+          aria-label="generate shows from"
           className="mt-14 grid w-full max-w-xl gap-7"
           variants={itemFadeDown}
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
+          autoComplete="off"
         >
           <fieldset className="grid gap-5">
             <label
-              htmlFor="show"
-              className="flex items-center gap-3 text-sm font-medium text-white sm:text-base"
+              htmlFor="shows"
+              className="flex gap-3 text-sm font-medium text-white sm:text-base"
             >
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-gray-600 text-sm text-white sm:text-base">
-                {watch("show") ? (
+              <span className="grid h-7 w-7 min-w-[1.75rem] place-items-center rounded-full bg-gray-600 text-sm text-white sm:text-base">
+                {watch("shows") ? (
                   <Check aria-hidden="true" className="h-5 w-5" />
                 ) : (
                   1
                 )}
               </span>
-              What show have you already watched?
+              <span>
+                What shows have you watched?{" "}
+                <span className="text-gray-400">
+                  (for multiple shows, separate with a comma)
+                </span>
+              </span>
             </label>
             <input
               type="text"
               id="show"
               className="w-full rounded-md border-gray-400 bg-transparent px-4 py-2.5 text-base text-gray-50 transition-colors placeholder:text-gray-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500"
-              placeholder="e.g. Stranger things"
-              {...register("show")}
+              placeholder="e.g. Stranger things, dark"
+              {...register("shows")}
             />
-            {formState.errors.show ? (
+            {formState.errors.shows ? (
               <div className="flex items-center gap-2 text-red-500">
                 <AlertCircle aria-hidden="true" className="h-4 w-4" />
                 <p className="text-sm font-medium">
-                  {formState.errors.show.message}
+                  {formState.errors.shows.message}
                 </p>
               </div>
             ) : null}
@@ -144,12 +149,12 @@ const Home: NextPageWithLayout = () => {
           <fieldset className="grid gap-5">
             <label
               htmlFor="mediaType"
-              className="flex items-center gap-3 text-sm font-medium text-white sm:text-base"
+              className="flex gap-3 text-sm font-medium text-white sm:text-base"
             >
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-gray-600 text-sm text-white sm:text-base">
+              <span className="grid h-7 w-7 min-w-[1.75rem] place-items-center rounded-full bg-gray-600 text-sm text-white sm:text-base">
                 {true ? <Check aria-hidden="true" className="h-5 w-5" /> : 2}
               </span>
-              What type of show are you looking for?
+              What type of shows are you looking for?
             </label>
             <DropdownSelect<Inputs>
               control={control}
